@@ -1,3 +1,5 @@
+![alt text](./documentation/Demo_Cockpit.png "Example of GSOF_Cockpit")
+
 Requires Python, pySerial and pyGame to run.
 
 http://python.org/

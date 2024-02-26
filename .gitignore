@@ -1,0 +1,4 @@
+/GSOF_Cockpit/__pycache__/*.*
+/build
+/dist
+/*.spec
