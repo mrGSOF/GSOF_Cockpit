@@ -8,36 +8,29 @@ import pygame
 from GSOF_Cockpit import Dial_base
    
 class SingleIndicator(Dial_base.Dial):
-   """
-   Dial gauge with single niddle.
-   """
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
-      """
-      Initialise dial at x,y
-      Default size of 300px can be overidden using w,h
-      """
-      self.screen = screen
-      self.inVal = 0
-      if bool(coefList) == False:
-         self.Deg_MinMax = (0,360)
-         self.Deg_Offset = 0
-         self.Deg_Modulu = 360
-         self.In_to_Deg = 1
-         self.In_Offset = 0
-         self.Kp = 1
-      else:
-         self.Deg_MinMax = coefList['DegMinMax']
-         self.Deg_Offset = coefList['DegOffset']
-         self.Deg_Modulu = coefList['DegModulu']
-         self.In_Offset = coefList['InOffset']
-         self.In_to_Deg =  coefList['InToDeg']
-         self.Kp = coefList['Kp']
+   """Dial gauge with single niddle."""
+   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={},
+                degMinMax = (-135,135),
+                degOffset = +135,
+                inToDeg   = 1,
+                inOffset  = 0,
+                degModulu = 360,
+                kp        = 0.8):
+      """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
+      self.screen     = screen
+      self.inVal      = 0
+      self.Deg_MinMax = degMinMax
+      self.Deg_Offset = degOffset
+      self.Deg_Modulu = degModulu
+      self.In_Offset  = inOffset
+      self.In_to_Deg  = inToDeg
+      self.Kp         = kp
 
       if bool(imgList) == False:
          path = os.path.dirname(__file__)
-         imgList['Ind'] = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
+         imgList['Ind']   = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
          imgList['Frame'] = pygame.image.load(os.path.join(path, 'resources/Indicator_Background.png'))
-      self.image = imgList['Ind'].convert()
+      self.image      = imgList['Ind'].convert()
       self.frameImage = imgList['Frame'].convert()
       super().__init__(screen, self.image, self.frameImage, pos, size)
        
@@ -62,9 +55,6 @@ class SingleIndicator(Dial_base.Dial):
       "screen" is the surface to draw the dial on
       """
       angleX = int(self.angleX)
-      #If the Needle is not centered in the skin-file. We can compensate for that. 
-#      tmpImage = self.clip(self.image, 0, 0, 0, 0, 0, -35)
-#      tmpImage = self.rotate(tmpImage, angleX)
       tmpImage = self.rotate(self.image, angleX)
       self.overlay(self.frameImage, 0,0)
       if iconLayer:

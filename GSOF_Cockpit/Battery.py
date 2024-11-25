@@ -8,21 +8,15 @@ import pygame
 from GSOF_Cockpit import SingleIndicator as SI
    
 class Battery(SI.SingleIndicator):
-   """
-   Battery dial.
-   """
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
-      """
-      Initialise dial at x,y.
-      Default size of 300px can be overidden using w,h.
-      """
-      if bool(coefList) == False:
-         coefList={'DegMinMax':(-135,135),
-                  'DegOffset':+135,
-                  'InToDeg':1,
-                  'InOffset':0,
-                  'DegModulu':360}
-         
+   """Battery dial."""
+   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={},
+                degMinMax = (-135,135),
+                degOffset = +135,
+                inToDeg   = 1,
+                inOffset  = 0,
+                degModulu = 360,
+                kp        = 0.8):
+      """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
       if bool(imgList) == False:
          path = os.path.dirname(__file__)
          self.icon = pygame.image.load(os.path.join(path, 'resources/battery2.png'))
@@ -30,8 +24,13 @@ class Battery(SI.SingleIndicator):
          frame = pygame.image.load(os.path.join(path, 'resources/Indicator_Background.png'))
          super().__init__(screen, pos, size,
                           imgList={'Ind':ind, 'Frame':frame},
-                          coefList=coefList
-                          )
+                          degMinMax = (-135,135),
+                          degOffset = +135,
+                          inToDeg   = 1,
+                          inOffset  = 0,
+                          degModulu = 360,
+                          kp        = 0.8)
+
          self.frameImage = pygame.image.load(os.path.join(path, 'resources/ledgend.png')).convert()
       else:
          self.icon = imgList['Icon'].convert()         #Icon of dial
