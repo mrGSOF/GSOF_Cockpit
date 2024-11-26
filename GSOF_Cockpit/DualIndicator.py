@@ -1,7 +1,5 @@
-## DualIndicator.py
-## 
 ## Created on: 28 Mar 2017
-## Author:     Guy Soffer
+## Author    : Guy Soffer
 
 import math, os
 import pygame
@@ -11,11 +9,10 @@ class DualIndicator(Dial_base.Dial):
    """
    Generic Dual-Indicator dial (Like Altmeter).
    """
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
-      """
-      Initialise dial at x,y.
-      Default size of 300px can be overidden using w,h.
-      """
+   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={},
+         aDegModulu = 360, aDegOffset = 0, aToDeg = 1.0, aMinMax = None, aKp = 1,
+         bDegModulu = 360, bDegOffset = 0, bToDeg = 1.0, bMinMax = None, bKp = 1):
+      """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
       self.valA = 0
       self.valB = 0
       if bool(imgList) == False:
@@ -31,30 +28,18 @@ class DualIndicator(Dial_base.Dial):
       if 'Mark' in imgList:
          self.marks = imgList['Mark'].convert()
       super().__init__(screen, self.A_Ind, self.frameImage, pos, size)
+      self.A_MinMax    = aMinMax
+      self.A_to_Deg    = aToDeg
+      self.A_Kp        = aKp
+      self.A_DegModulu = aDegModulu
+      self.A_DegOffset = aDegOffset
 
-      if bool(coefList) == False:
-         self.A_DegModulu = 360
-         self.B_DegModulu = 360
-         self.A_DegOffset = 0
-         self.B_DegOffset = 0
-         self.A_to_Deg = 1.0
-         self.B_to_Deg = 1.0
-         self.A_MinMax = None
-         self.B_MinMax = None
-         self.A_Kp = 1
-         self.B_Kp = 1
-      else:
-         self.A_MinMax = coefList['A_MinMax']
-         self.B_MinMax = coefList['B_MinMax']
-         self.A_to_Deg = coefList['A_ToDeg']
-         self.B_to_Deg = coefList['B_ToDeg']
-         self.A_Kp = coefList['A_Kp']
-         self.B_Kp = coefList['B_Kp']
-         self.A_DegModulu = coefList['A_DegModulu']
-         self.B_DegModulu = coefList['B_DegModulu']
-         self.A_DegOffset = coefList['A_DegOffset']
-         self.B_DegOffset = coefList['B_DegOffset']
-         
+      self.B_MinMax    = bMinMax
+      self.B_to_Deg    = bToDeg
+      self.B_Kp        = bKp
+      self.B_DegModulu = bDegModulu
+      self.B_DegOffset = bDegOffset
+
    def update(self, valA, valB):
       self.valA += (valA -self.valA)*self.A_Kp
       self.valB += (valB -self.valB)*self.B_Kp

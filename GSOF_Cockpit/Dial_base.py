@@ -1,7 +1,5 @@
-## Dial_base.py
-## 
 ## Created on: 28 Mar 2017
-## Author:     Guy Soffer
+## Author    : Guy Soffer
 
 import math
 import pygame

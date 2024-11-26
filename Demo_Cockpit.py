@@ -27,7 +27,7 @@ class DemoCockpit():
       self.screen = screen
       self.colorBG = colorBG
 
-      #Scaling the indicators
+      ###Scaling the indicators
       turn_size = (int(150*scale), int(150*scale))
       horizon_size = (int(300*scale), int(300*scale))
       engine_size = (int(75*scale), int(75*scale))
@@ -40,16 +40,16 @@ class DemoCockpit():
       g_size = (int(150*scale), int(150*scale))
       background_size = (int(600*scale), int(450*scale))
 
-      #Positioning the gauges
+      ###Positioning the gauges
       X0, Y0 = pos
       turn_pos = (X0 +gap, Y0 +gap)
       horizon_pos = (turn_pos[0] +turn_size[0] +gap, turn_pos[1])
       engine_pos = [0]*4
       eGap = 0
-      engine_pos[1] = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])          #Arangment
-      engine_pos[0] = ((engine_pos[1])[0] +engine_size[0]+ eGap, (engine_pos[1])[1])  #[1] [0]
-      engine_pos[2] = ((engine_pos[1])[0], (engine_pos[1])[1] +engine_size[1] +eGap)  #   X
-      engine_pos[3] = ((engine_pos[0])[0], (engine_pos[2])[1])                        #[2] [3]
+      engine_pos[0] = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])          #Arangment
+      engine_pos[3] = ((engine_pos[1])[0] +engine_size[0]+ eGap, (engine_pos[1])[1])  #[0] [3]
+      engine_pos[1] = ((engine_pos[1])[0], (engine_pos[1])[1] +engine_size[1] +eGap)  #   X
+      engine_pos[2] = ((engine_pos[0])[0], (engine_pos[2])[1])                        #[1] [2]
 
       rfSignal_pos = (turn_pos[0], turn_pos[1] +turn_size[1] +gap)
       BattTitle_pos = ((engine_pos[2])[0], (engine_pos[2])[1] +engine_size[1] +10)
@@ -61,7 +61,7 @@ class DemoCockpit():
       head_pos = (vsi_pos[0] +vsi_size[0] +gap, vsi_pos[1])
       g_pos = (head_pos[0] +head_size[0] +gap, head_pos[1])
 
-      # Initialise the gauges.
+      ###Initialise the gauges.
       self.background = TEXT.TextCtrl( GUIobj=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
       self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size,
                                    coefList={'RollToDeg':1,   #< Use 360.0/6.28, #When input is in (Rad)
@@ -81,42 +81,37 @@ class DemoCockpit():
                                             }
                                   )
       self.engine = [0]*4
-##      self.engine[0] = SI.SingleIndicator( self.screen, pos=engine_pos[0], size=engine_size,
-##                                     imgList={'Frame':pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-##                                              'Ind':pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-##                                              },
-##                                     coefList={
-##                                              'InToDeg':-180.0/100,  #< Input value to degrees factor applied after offset
-##                                              'InOffset':0,          #< Input offeset is added to input value before scale factor
-##                                              'Kp':0.8,              #< Filter coefficiant
-##                                              'DegMinMax':(-180,0),  #< Indicator angle min/max (deg)
-##                                              'DegOffset':0,         #< Angle of indicator at zero input (deg)
-##                                              'DegModulu':360,       #< Modulu for indicator angle (deg)
-##                                              }
-##                                     )
-##      self.engine[1] = DI.DualIndicator( self.screen, pos=engine_pos[1], size=engine_size,
-##                                           imgList={'Frame':pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-##                                                    'IndA':pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-##                                                    'IndB':pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-##                                                    #'Mark':pygame.image.load('resources/Alt_Meter200_Null.png')
-##                                                    },
-##                                          coefList={
-##                                                  'A_ToDeg':-180.0/100, #< Input value to degrees factor applied after offset
-##                                                  'A_DegOffset':0,      #< Input offeset is added to input value before scale factor
-##                                                  'A_DegModulu':180,    #< Modulu for indicator angle (deg)
-##                                                  'A_MinMax':(0,99),    #< Indicator angle min/max (deg)
-##                                                  'A_Kp':0.8,           #< Filter coefficiant (0-no filter)
-##
-##                                                  'B_ToDeg':-180.0/100, #< Input value to degrees factor applied after offset
-##                                                  'B_DegOffset':180,    #< Input offeset is added to input value before scale factor
-##                                                  'B_DegModulu':180,    #< Modulu for indicator angle (deg)
-##                                                  'B_MinMax':(0,99),    #< Indicator angle min/max (deg)
-##                                                  'B_Kp':0.1,           #< Filter coefficiant (0-no filter)
-##                                           }
-##                                  )
-##
-##      self.engine[2] = SI.SingleIndicator( self.screen, pos=engine_pos[2], size=engine_size )
-##      self.engine[3] = SI.SingleIndicator( self.screen, pos=engine_pos[3], size=engine_size )
+      self.engine[0] = SI.SingleIndicator( self.screen, pos=engine_pos[0], size=engine_size,
+                                     imgList={'Frame':pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
+                                              'Ind':pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
+                                              },
+                                     inToDeg   = -180.0/100, #< Input value to degrees factor applied after offset
+                                     inOffset  = 0,          #< Input offeset is added to input value before scale factor
+                                     kp        = 0.8,        #< Filter coefficiant
+                                     degMinMax = (-180,0),   #< Indicator angle min/max (deg)
+                                     degOffset = 0,          #< Angle of indicator at zero input (deg)
+                                     degModulu = 360)        #< Modulu for indicator angle (deg)
+
+      self.engine[1] = DI.DualIndicator( self.screen, pos=engine_pos[1], size=engine_size,
+                                           imgList={'Frame':pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
+                                                    'IndA':pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
+                                                    'IndB':pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
+                                                    #'Mark':pygame.image.load('resources/Alt_Meter200_Null.png')
+                                                    },
+                                          aToDeg     = -180.0/100, #< Input value to degrees factor applied after offset
+                                          aDegOffset = 0,          #< Input offeset is added to input value before scale factor
+                                          aDegModulu = 180,        #< Modulu for indicator angle (deg)
+                                          aMinMax    = (0,99),     #< Indicator angle min/max (deg)
+                                          aKp        = 0.8,        #< Filter coefficiant (0-no filter)
+
+                                          bToDeg     = -180.0/100, #< Input value to degrees factor applied after offset
+                                          bDegOffset = 180,        #< Input offeset is added to input value before scale factor
+                                          bDegModulu = 180,        #< Modulu for indicator angle (deg)
+                                          bMinMax    = (0,99),     #< Indicator angle min/max (deg)
+                                          bKp        = 0.1)        #< Filter coefficiant (0-no filter)
+
+      self.engine[2] = SI.SingleIndicator( self.screen, pos=engine_pos[2], size=engine_size )
+      self.engine[3] = SI.SingleIndicator( self.screen, pos=engine_pos[3], size=engine_size )
 
       self.battTitle = TEXT.TextCtrl( GUIobj=self.screen,
                                         pos=BattTitle_pos, size=-1,
@@ -146,18 +141,16 @@ class DemoCockpit():
 #                                           'IndB':pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
 #                                           #'Mark':pygame.image.load('skin/Alt_Meter200_Null.png'),
 #                                           },
-                                  coefList={'A_DegModulu':360,
-                                            'B_DegModulu':360,
-                                            'A_DegOffset':0,
-                                            'B_DegOffset':0,
-                                            'A_ToDeg':-360.0/1000,
-                                            'B_ToDeg':-36.0/1000,
-                                            'A_MinMax':None,
-                                            'B_MinMax':None,
-                                            'A_Kp':1,
-                                            'B_Kp':1,
-                                            }
-                                  )
+                                  aDegModulu = 360,
+                                  bDegModulu = 360,
+                                  aDegOffset = 0,
+                                  bDegOffset = 0,
+                                  aToDeg     = -360.0/1000,
+                                  bToDeg     = -36.0/1000,
+                                  aMinMax    = None,
+                                  bMinMax    = None,
+                                  aKp        = 1,
+                                  bKp        = 1)
                                  
       self.vsi = SI.SingleIndicator( self.screen, pos=vsi_pos, size=vsi_size,
                                imgList={'Frame':pygame.image.load('%s/resources/VerticalSpeedIndicator_Background.png'%folder),
@@ -175,47 +168,39 @@ class DemoCockpit():
                                            'IndB':pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
                                            'Mark':pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
                                            },
-                                  coefList={'A_DegModulu':360,
-                                            'B_DegModulu':360,
-                                            'A_DegOffset':0,
-                                            'B_DegOffset':0,
-                                            'A_ToDeg':-1,
-                                            'B_ToDeg':-1,
-                                            'A_MinMax':None,
-                                            'B_MinMax':None,
-                                            'A_Kp':0.5,
-                                            'B_Kp':1,
-                                            }
-                                  )
+                                  aDegModulu = 360,
+                                  bDegModulu = 360,
+                                  aDegOffset = 0,
+                                  bDegOffset = 0,
+                                  aToDeg     = -1,
+                                  bToDeg     = -1,
+                                  aMinMax    = None,
+                                  bMinMax    = None,
+                                  aKp        = 0.5,
+                                  bKp        = 1)
 
       self.g = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
                              imgList={'Frame':pygame.image.load('%s/skin/G_Meter200.png'%folder),
                                       'Ind':pygame.image.load('%s/skin/G_Meter_Ind200.png'%folder),
                                    },
-                             coefList={
-                                       'InToDeg':4.6,
-                                       'InOffset':9.8,
-                                       'Kp':0.8,
-                                       'DegMinMax':(-270,270),
-                                       'DegOffset':90,#129,
-                                       'DegModulu':270,
-                                       }
-                            )
+                             inToDeg   = 4.6,
+                             inOffset  = 9.8,
+                             kp        = 0.8,
+                             degMinMax = (-270,270),
+                             degOffset = 90,#129,
+                             degModulu = 270)
 
 ##      self.steeringWheel = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
 ##                             imgList={'Frame':pygame.image.load('%s/skin/Indicator_Background.png'%folder),
 ##                                      'Frame_':pygame.image.load('%s/skin/G_Meter200.png'%folder),
 ##                                      'Ind':pygame.image.load('%s/skin/SteeringWheel300.png'%folder),
 ##                                   },
-##                             coefList={
-##                                       'InToDeg':10.0,
-##                                       'InOffset':9.8,
-##                                       'Kp':0.8,
-##                                       'DegMinMax':(-270,270),
-##                                       'DegOffset':0,
-##                                       'DegModulu':360,
-##                                       }
-##                            )
+##                             inToDeg   = 10.0,
+##                             inOffset  = 9.8,
+##                             kp        = 0.8,
+##                             degMinMax = (-270,270),
+##                             degOffset = 0,
+##                             degModulu = 360)
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
