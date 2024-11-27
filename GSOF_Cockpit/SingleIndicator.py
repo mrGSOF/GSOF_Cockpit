@@ -1,42 +1,39 @@
-## Generic_base.py
-## 
 ## Created on: 28 Mar 2017
-## Author:     Guy Soffer
+## Author    : Guy Soffer
 
 import math, os
 import pygame
 from GSOF_Cockpit import Dial_base
    
 class SingleIndicator(Dial_base.Dial):
-   """Dial gauge with single niddle."""
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={},
+   """Dial gauge with single hand (niddle)"""
+   def __init__(self, screen, pos=(0,0), size=(0,0), handImage=None, bodyImage=None,
                 degMinMax = (-135,135),
-                degOffset = +135,
-                inToDeg   = 1,
-                inOffset  = 0,
-                degModulu = 360,
-                kp        = 0.8):
+                degOffset   = +135,
+                inputToDeg  = 1,
+                inputOffset = 0,
+                degModulu   = 360,
+                kp          = 0.8):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
-      self.screen     = screen
-      self.inVal      = 0
+      path = os.path.dirname(__file__)
+      if handImage == None:
+         handImage = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
+      if bodyImage == None:
+         bodyImage = pygame.image.load(os.path.join(path, 'resources/Indicator_Background.png'))
+      super().__init__(screen, handImage, bodyImage, pos, size)
       self.Deg_MinMax = degMinMax
       self.Deg_Offset = degOffset
       self.Deg_Modulu = degModulu
-      self.In_Offset  = inOffset
-      self.In_to_Deg  = inToDeg
+      self.offset     = inputOffset #< input offset
+      self.toDeg      = inputToDeg  #< Input to degrees
       self.Kp         = kp
-
-      if bool(imgList) == False:
-         path = os.path.dirname(__file__)
-         imgList['Ind']   = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
-         imgList['Frame'] = pygame.image.load(os.path.join(path, 'resources/Indicator_Background.png'))
-      self.image      = imgList['Ind'].convert()
-      self.frameImage = imgList['Frame'].convert()
-      super().__init__(screen, self.image, self.frameImage, pos, size)
+      self.inVal      = 0
+      self.update(self.inVal)
        
-   def update(self, inVal):
-      self.inVal += (inVal -self.inVal)*self.Kp
-      angleX = (self.inVal +self.In_Offset)*self.In_to_Deg
+   def update(self, val):
+      """Update the angle of the indicator's hand"""
+      self.inVal += (val -self.inVal)*self.Kp
+      angleX = (self.inVal +self.offset)*self.toDeg
 
       Min, Max = self.Deg_MinMax
       if angleX > Max:
@@ -48,17 +45,12 @@ class SingleIndicator(Dial_base.Dial):
       angleX += self.Deg_Offset
       self.angleX = angleX
 
-   def draw(self, iconLayer=0):
-      """
-      Called to draw a Generic dial
-      "angleX" and "angleY" are the inputs
-      "screen" is the surface to draw the dial on
-      """
-      angleX = int(self.angleX)
-      tmpImage = self.rotate(self.image, angleX)
-      self.overlay(self.frameImage, 0,0)
-      if iconLayer:
-         self.overlay(iconLayer[0],iconLayer[1],iconLayer[2])
-      self.overlay(tmpImage, 0, 0)
-      self.dial.set_colorkey(0xFFFF00)
-      self.screen.blit( pygame.transform.scale(self.dial,(self.w,self.h)), self.pos )
+   def draw(self, iconLayer = None):
+      """Draw a indicator"""
+      self._overlay(self._body, 0,0)                           #< Overlay on the body
+      if iconLayer != None:
+         self._overlay(iconLayer[0],iconLayer[1],iconLayer[2]) #< Overlay an icon in x,y
+      hand = Dial_base.rotate(self._hand, int(self.angleX))    #< Rotate the hand
+      self._overlay(hand, 0, 0)                                #< Overlay hand on body 
+      self._dial.set_colorkey(0xFFFF00)
+      self._screen.blit( pygame.transform.scale(self._dial,(self.w,self.h)), self.pos )
