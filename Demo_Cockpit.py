@@ -106,8 +106,8 @@ class DemoCockpit():
                                           moduluA_deg = 360,        #< Modulu for indicator angle (deg)
 
                                           inputBtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                          offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
-                                          minMaxB_deg = (-180,0),   #< Indicator angle min/max (deg)
+                                          offsetB_deg = 180,         #< Input offeset is added to input value before scale factor
+                                          minMaxB_deg = (-360,180),   #< Indicator angle min/max (deg)
                                           moduluB_deg = 360         #< Modulu for indicator angle (deg)
                                           )
 
@@ -136,22 +136,26 @@ class DemoCockpit():
                                minMax_deg  = (-160,160),   #< Limits of indicator before applying offset
                                modulu_deg  = 360)
 
-##      self.alt = DI.DualIndicator( self.screen, pos=alt_pos, size=alt_size,
-###                                  imgList={'Frame':pygame.image.load('skin/Alt_Meter200.png'),
-###                                           'IndA':pygame.image.load('skin/Alt_Meter200_L_Needle.png'),
-###                                           'IndB':pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
-###                                           #'Mark':pygame.image.load('skin/Alt_Meter200_Null.png'),
-###                                           },
-##                                  aDegModulu = 360,
-##                                  bDegModulu = 360,
-##                                  aDegOffset = 0,
-##                                  bDegOffset = 0,
-##                                  aToDeg     = -360.0/1000,
-##                                  bToDeg     = -36.0/1000,
-##                                  aMinMax    = None,
-##                                  bMinMax    = None,
-##                                  aKp        = 1,
-##                                  bKp        = 1)
+      self.alt = DI.DualIndicator( self.screen, pos=alt_pos, size=alt_size,
+#                                   bodyImage  = pygame.image.load('skin/Alt_Meter200.png'),
+#                                   handAImage = pygame.image.load('skin/Alt_Meter200_L_Needle.png'),
+#                                   handAImage = pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
+#                                   iconImage  = pygame.image.load('skin/Alt_Meter200_Null.png'),
+
+                                   inputGain   = 1.0,        #< Input scaling is applied before offeset
+                                   inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
+                                   kp          = 1.0,        #< Filter coefficiant (0-no filter)
+
+                                   inputAtoDeg = -360.0/1000, #< Input value to degrees factor applied after offset
+                                   offsetA_deg = 0,           #< Input offeset is added to input value before scale factor
+                                   minMaxA_deg = None,        #< Indicator angle min/max (deg)
+                                   moduluA_deg = 360,         #< Modulu for indicator angle (deg)
+
+                                   inputBtoDeg = -36.0/1000,  #< Input value to degrees factor applied after offset
+                                   offsetB_deg = 0,           #< Input offeset is added to input value before scale factor
+                                   minMaxB_deg = None,        #< Indicator angle min/max (deg)
+                                   moduluB_deg = 360          #< Modulu for indicator angle (deg)
+                                 )
                                  
       self.vsi = SI.SingleIndicator( self.screen, pos=vsi_pos, size=vsi_size,
                                      bodyImage   = pygame.image.load('%s/resources/VerticalSpeedIndicator_Background.png'%folder),
@@ -164,10 +168,10 @@ class DemoCockpit():
                                      modulu_deg  = 360)
 
 ##      self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
-##                                  imgList={'Frame':pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
-##                                           'IndA':pygame.image.load('%s/resources/HeadingWheel.png'%folder),
-##                                           'IndB':pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-##                                           'Mark':pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
+##                                  bodyImage   = pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
+##                                  handAImage  = pygame.image.load('%s/resources/HeadingWheel.png'%folder),
+##                                  handBImage  = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
+##                                  #iconImage   = pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
 ##                                           },
 ##                                  aDegModulu = 360,
 ##                                  bDegModulu = 360,
@@ -214,14 +218,14 @@ class DemoCockpit():
 ##         self.horizon.update(rf_data['RX_est_x'], data_stream['RX_est_y'] )
 ##         self.turn.update((-rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4)
          self.engine[0].update(data_stream['RX_eng'])
-         self.engine[1].update(data_stream['RX_eng'])#+random.randrange(-10,10), data_stream['RX_eng'] +random.randrange(-5,5))
+         self.engine[1].update(val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'])
          self.engine[2].update(data_stream['RX_eng'])
          self.engine[3].update(data_stream['RX_eng'])
          self.Vbat.update(data_stream['RX_batt_volt'])
          self.Ibat.update(data_stream['RX_batt_cur'])
          #self.rfSignal.update(data_stream['RX_fr_sucsess'], data_stream['TX_fr_sucsess'],a)
          self.rfSignal.update(data_stream['TX_fr_sucsess'],t)
-##         self.alt.update(rf_data['RX_alt'], rf_data['RX_alt'])
+         self.alt.update(rf_data['RX_alt'], rf_data['RX_alt'])
          self.vsi.update(rf_data['RX_vsi'])
 ##         self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
@@ -243,7 +247,7 @@ class DemoCockpit():
          self.Vbat.draw()
          self.Ibat.draw()
          self.rfSignal.draw()
-##         self.alt.draw()
+         self.alt.draw()
          self.vsi.draw()
 ##         self.head.draw()
          self.g.draw()

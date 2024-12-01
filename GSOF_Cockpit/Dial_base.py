@@ -72,11 +72,12 @@ class Hand():
             val = self.val_Z1
         angle = val*self.toDeg +self.offset_deg
 
-        Min, Max = self.minMax_deg
-        if angle > Max:
-            angle = Max
-        elif angle < Min:
-            angle = Min
+        if self.minMax_deg != None:
+            Min, Max = self.minMax_deg
+            if angle > Max:
+                angle = Max
+            elif angle < Min:
+                angle = Min
         self.angle_deg = math.fmod(angle, self.modulu_deg)
     
 class Dial():
