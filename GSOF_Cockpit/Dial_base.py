@@ -6,16 +6,15 @@ import pygame
 
 def rotate(image, angle):
     """
-    Rotate supplied image by "angle" degrees
-    Rotates round the center of the image
+    Rotate image by "angle" degrees around it's center
     If you need to offset the centre, resize the image using clip
-    Rotate dial needles and probably doesn't need to be used externally
+    Used to rotate dial needles and probably doesn't need to be used externally
     """
     tmpImage = pygame.transform.rotate(image ,angle)
     imageCentreX = tmpImage.get_rect()[0] +tmpImage.get_rect()[2]/2
     imageCentreY = tmpImage.get_rect()[1] +tmpImage.get_rect()[3]/2
 
-    targetWidth = tmpImage.get_rect()[2]
+    targetWidth  = tmpImage.get_rect()[2]
     targetHeight = tmpImage.get_rect()[3]
 
     imageOut = pygame.Surface((targetWidth, targetHeight))
@@ -35,7 +34,7 @@ def clip(image, x=0, y=0, w=0, h=0, oX=0, oY=0):
     """
     Cuts out a part of the needle image at x,y position to the correct size (w,h)
     Copy to "imageOut" at an offset of oX,oY if required
-    Center the indicators inside the gauge frame
+    Used to center the indicators inside the gauge frame
     """
     if w == 0:
         w = image.get_rect()[2]
@@ -50,17 +49,47 @@ def clip(image, x=0, y=0, w=0, h=0, oX=0, oY=0):
     imageOut.blit(image, (needleW/2 -w/2 +oX, needleH/2 -h/2 +oY), pygame.Rect(x,y,w,h))
     return imageOut
 
+class Hand():
+    def __init__(self, initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg, skin):
+      self.val_Z1     = initVal
+      self.offset     = offset
+      self.gain       = gain
+      self.kp         = kp
+      self.toDeg      = toDeg
+      self.offset_deg = offset_deg
+      self.minMax_deg = minMax_deg
+      self.modulu_deg = modulu_deg
+      self.skin       = skin
+      self.update(self.val_Z1)
+
+    def update(self, val) -> None:
+        val = val*self.gain +self.offset
+        self.val_Z1 += (val -self.val_Z1)*self.kp
+        self._updateAngle()
+
+    def _updateAngle(self, val=None):
+        if val == None:
+            val = self.val_Z1
+        angle = val*self.toDeg +self.offset_deg
+
+        Min, Max = self.minMax_deg
+        if angle > Max:
+            angle = Max
+        elif angle < Min:
+            angle = Min
+        self.angle_deg = math.fmod(angle, self.modulu_deg)
+    
 class Dial():
    """Generic gauge"""
-   def __init__(self, screen, handImage, bodyImage, pos=(0,0), size=(0,0) ):
+   def __init__(self, screen, bodyImage, pos=(0,0), size=(0,0), iconImage=None ):
       """
       pos = Position of top left corner of the dial (x,y)
       size = Width and height of dial (w,h)
       """
       self._screen = screen
-      self._hand  = handImage.convert()
-      self._body  = bodyImage.convert()
-      self._dial = pygame.Surface(self._body.get_rect()[2:4])
+      self._body   = bodyImage.convert()
+      self._dial   = pygame.Surface(self._body.get_rect()[2:4])
+      self._icon   = iconImage
       self._dial.fill(0xFFFF00)
 
       self.x, self.y = pos

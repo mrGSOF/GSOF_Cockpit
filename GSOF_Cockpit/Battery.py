@@ -8,13 +8,13 @@ from GSOF_Cockpit import SingleIndicator as SI
 class Battery(SI.SingleIndicator):
    """Battery dial"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
-                handImage=None, bodyImage=None, iconImage=None, legendImage=None,
-                degMinMax   = (-135,135),
-                degOffset   = +135,
-                inputToDeg  = 1,
+                bodyImage=None, legendImage=None, iconImage=None, handImage=None,
                 inputOffset = 0,
-                degModulu   = 360,
-                kp          = 0.8):
+                kp          = 0.8,
+                minMax_deg  = (-135,135),
+                offset_deg  = +135,
+                inputToDeg  = 1,
+                modulu_deg  = 360):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
@@ -29,14 +29,14 @@ class Battery(SI.SingleIndicator):
          self.icon = iconImage
 
       super().__init__(screen, pos, size,
-                       handImage   = handImage,
                        bodyImage   = bodyImage,
-                       degMinMax   = degMinMax,
-                       degOffset   = degOffset,
-                       inputToDeg  = inputToDeg,
+                       handImage   = handImage,
                        inputOffset = inputOffset,
-                       degModulu   = degModulu,
-                       kp          = kp)
+                       kp          = kp,
+                       inputToDeg  = inputToDeg,
+                       offset_deg  = offset_deg,
+                       minMax_deg  = minMax_deg,
+                       modulu_deg  = modulu_deg)
 
    def draw(self):
       """Draw a Battery dial"""

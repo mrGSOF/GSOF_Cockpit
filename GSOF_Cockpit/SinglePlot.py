@@ -32,7 +32,7 @@ class SinglePlot(SI.SingleIndicator):
          path = os.path.dirname(__file__)
          bodyImage = pygame.image.load(os.path.join(path, 'resources/RF_Dial_Background.png'))
       bodyImage = bodyImage.convert() #Frame of dial
-      super(SI.SingleIndicator, self).__init__(screen, self.image, bodyImage, pos, size)
+      super(SI.SingleIndicator, self).__init__(screen, bodyImage, pos, size)
        
    def update(self, inputA, scanPos):
        """Update and gauge values"""
