@@ -3,9 +3,9 @@
 
 import math, os, pkg_resources
 import pygame
-from GSOF_Cockpit import SingleIndicator as SI
+from GSOF_Cockpit import SingleIndicator
    
-class Battery(SI.SingleIndicator):
+class Battery(SingleIndicator.SingleIndicator):
    """Battery dial"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
                 bodyImage=None, legendImage=None, iconImage=None, handImage=None,
@@ -24,9 +24,7 @@ class Battery(SI.SingleIndicator):
       if handImage == None:
          handImage = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
       if iconImage == None:
-         self.icon = pygame.image.load(os.path.join(path, 'resources/battery2.png'))
-      else:
-         self.icon = iconImage
+         iconImage = pygame.image.load(os.path.join(path, 'resources/battery2.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,
@@ -37,7 +35,4 @@ class Battery(SI.SingleIndicator):
                        offset_deg  = offset_deg,
                        minMax_deg  = minMax_deg,
                        modulu_deg  = modulu_deg)
-
-   def draw(self):
-      """Draw a Battery dial"""
-      super().draw( (self.icon, 0, 100) )
+      self.setIcon(iconImage=iconImage, x=0, y=100)      

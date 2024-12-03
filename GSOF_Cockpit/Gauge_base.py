@@ -1,10 +1,10 @@
-## Created on: 28 Mar 2017
+## Created on: 2 / Dec 2024
 ## Author    : Guy Soffer
 
 import math
 import pygame
 
-class SingleInput():
+class Gauge():
    """Generic gauge with single input variable"""
    def __init__(self, screen, bodyImage, pos=(0,0), size=(0,0), iconImage=None ):
       """
@@ -27,23 +27,37 @@ class SingleInput():
       self.pos = self._dial.get_rect()
       self.pos = self.pos.move( *pos )
 
-   def position(self, x, y):
+   def setIcon(self, iconImage, x, y):
+      self._icon  = iconImage
+      self._iconX = x
+      self._iconY = y
+      return self
+   
+   def setPosition(self, x, y) -> None:
        """Reposition top,left of dial at x,y"""
        self.x = x 
        self.y = y
        self.pos[0] = x
        self.pos[1] = y
 
-   def position_center(self, x, y):
+   def positionCenter(self, x, y) -> None:
        """Reposition centre of dial at x,y"""
        self.x = x
        self.y = y
        self.pos[0] = x - self.pos[2]/2
        self.pos[1] = y - self.pos[3]/2
 
-   def _overlay(self, image, x, y, r=0):
+   def _overlay(self, image, x, y, r=0) -> None:
        """Overlays one image on top of another using 0xFFFF00 (Yellow) as the overlay color"""
        x -= (image.get_rect()[2] - self._dial.get_rect()[2])/2
        y -= (image.get_rect()[3] - self._dial.get_rect()[3])/2
        image.set_colorkey(0xFFFF00)
        self._dial.blit(image, (x,y))
+
+   def draw(self, draw=True):
+      self._overlay(self._body, 0,0)                         #< Overlay body on dial
+      if self._icon != None:
+         self._overlay(self._icon ,self._iconX ,self._iconY) #< Overlay icon on dial at x,y
+      if draw == True:
+         self._dial.set_colorkey(0xFFFF00)
+         self._screen.blit( pygame.transform.scale( self._dial, (self.w, self.h)), self.pos )

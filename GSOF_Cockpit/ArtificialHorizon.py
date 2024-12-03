@@ -1,45 +1,52 @@
-## ArticifialHorizon.py
-##
 ## Created on: 28 Mar 2017
-## Author:     Guy Soffer
+## Author    : Guy Soffer
 
 import math, os
 import pygame
-from GSOF_Cockpit import Dial_base
+from GSOF_Cockpit.Dial_base import Dial_base
 
-class ArtificialHorizon(Dial_base.Dial):
-   """
-   Artificial horizon dial.
-   """
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
-      """
-      Initialise dial at x,y.
-      Default size of 300px can be overidden using w,h.
-      """
-      self.roll = 0
-      self.pitch = 0
-      if bool(coefList) == False:
-         self.rollToDeg   = 1
-         self.rollOffset  = 0
-         self.pitchToDeg  = 1
-         self.pitchOffset = 0
-         self.Kp = 0
-      else:
-         self.rollToDeg   = coefList['RollToDeg']
-         self.rollOffset  = coefList['RollOffset']
-         self.pitchToDeg  = coefList['PitchToDeg']
-         self.pitchOffset = coefList['PitchOffset']
-         self.Kp = coefList['Kp']
+class ArtificialHorizon(Dial_base):
+   """Artificial horizon dial"""
+   def __init__(self, screen, pos=(0,0), size=(0,0),
+                bodyImage=None, ballImage=None, birdImage=None,
+                rollOffset = 0.0,    #< Input offeset is added to input value afterscale factor
+                rollToDeg  = 1.0,    #< Input scaling is applied before offeset
+                rollKp     = 0.5,    #< Filter coefficiant (0-no filter)
 
-      if bool(imgList) == False:
-         path = os.path.dirname(__file__)
-         imgList['Frame'] = pygame.image.load(os.path.join(path, 'resources/Horizon_Background.png'))
-         imgList['Ball']  = pygame.image.load(os.path.join(path, 'resources/Horizon_GroundSky.png'))
-         imgList['Bird']  = pygame.image.load(os.path.join(path, 'resources/Maquette_Avion.png'))
-      self.image = imgList['Ball'].convert()
-      self.frameImage = imgList['Frame'].convert()
-      self.maquetteImage = imgList['Bird'].convert()
-      super().__init__(screen, self.image, self.frameImage, pos, size)
+                pitchOffset = 0.0,    #< Input offeset is added to input value afterscale factor
+                pitchToDeg  = 1.0,    #< Input scaling is applied before offeset
+                pitchKp     = 0.5)    #< Filter coefficiant (0-no filter)
+      """Artificial horizon gauge. Default size of 300px can be overidden using w,h"""
+##      self.roll = 0
+##      self.pitch = 0
+##      if bool(coefList) == False:
+##         self.rollToDeg   = 1
+##         self.rollOffset  = 0
+##         self.pitchToDeg  = 1
+##         self.pitchOffset = 0
+##         self.Kp = 0
+##      else:
+##         self.rollToDeg   = coefList['RollToDeg']
+##         self.rollOffset  = coefList['RollOffset']
+##         self.pitchToDeg  = coefList['PitchToDeg']
+##         self.pitchOffset = coefList['PitchOffset']
+##         self.Kp = coefList['Kp']
+
+      path = os.path.dirname(__file__)
+      if bodyImage == None:
+         bodyImage = pygame.image.load(os.path.join(path, 'resources/Horizon_Background.png')).convert()
+
+      if ballImage == None:
+         ballImage = pygame.image.load(os.path.join(path, 'resources/Horizon_GroundSky.png')).convert()
+
+      if birdImage == None:
+         birdImage = pygame.image.load(os.path.join(path, 'resources/Maquette_Avion.png')).convert()
+
+      super().__init__(screen,
+                       bodyImage = bodyImage,
+                       handAImage = ballImage,
+                       handBImage = None,                       
+                       pos, size)
        
    def update(self, roll, pitch):
       """

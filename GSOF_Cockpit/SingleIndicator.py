@@ -3,10 +3,10 @@
 
 import math, os
 import pygame
-from GSOF_Cockpit.SingleInput_base import SingleInput
+from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.GraphicsLib import rotate, Hand
 
-class SingleIndicator(SingleInput):
+class SingleIndicator(Gauge):
    """Dial gauge with single hand (niddle)"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
                 bodyImage=None, handImage=None,
@@ -42,12 +42,11 @@ class SingleIndicator(SingleInput):
       """Update the angle of the indicator's hand"""
       self._handA.update(val)
 
-   def draw(self, iconLayer = None):
+   def draw(self, draw=True):
       """Draw a indicator"""
-      self._overlay(self._body, 0,0)                                        #< Overlay on the body
-      if iconLayer != None:
-         self._overlay(iconLayer[0] ,iconLayer[1] ,iconLayer[2])            #< Overlay an icon in x,y
+      super().draw(draw=False)                                    #< Draw body and icon
       hand = rotate(self._handA.skin, int(self._handA.angle_deg)) #< Rotate the hand
-      self._overlay(hand, 0, 0)                                             #< Overlay hand on body 
-      self._dial.set_colorkey(0xFFFF00)
-      self._screen.blit( pygame.transform.scale( self._dial, (self.w, self.h)), self.pos )
+      self._overlay(hand, 0, 0)                                   #< Overlay hand on body 
+      if draw == True:
+         self._dial.set_colorkey(0xFFFF00)
+         self._screen.blit( pygame.transform.scale( self._dial, (self.w, self.h)), self.pos )

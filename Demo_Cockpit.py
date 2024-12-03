@@ -106,8 +106,8 @@ class DemoCockpit():
                                           moduluA_deg = 360,        #< Modulu for indicator angle (deg)
 
                                           inputBtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                          offsetB_deg = 180,         #< Input offeset is added to input value before scale factor
-                                          minMaxB_deg = (-360,180),   #< Indicator angle min/max (deg)
+                                          offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
+                                          minMaxB_deg = (-360,180), #< Indicator angle min/max (deg)
                                           moduluB_deg = 360         #< Modulu for indicator angle (deg)
                                           )
 
