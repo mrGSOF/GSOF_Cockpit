@@ -4,6 +4,8 @@
 import math
 import pygame
 
+overlayColor = 0xFFFF00
+
 def rotate(image, angle):
     """
     Rotate image by "angle" degrees around it's center
@@ -18,8 +20,8 @@ def rotate(image, angle):
     targetHeight = tmpImage.get_rect()[3]
 
     imageOut = pygame.Surface((targetWidth, targetHeight))
-    imageOut.fill(0xFFFF00)
-    imageOut.set_colorkey(0xFFFF00)
+    imageOut.fill( overlayColor )
+    imageOut.set_colorkey( overlayColor )
     imageOut.blit(tmpImage,
                   (0,0),
                   pygame.Rect(imageCentreX -targetWidth/2,
@@ -44,10 +46,14 @@ def clip(image, x=0, y=0, w=0, h=0, oX=0, oY=0):
     needleW = w +2*math.sqrt(oX*oX)
     needleH = h +2*math.sqrt(oY*oY)
     imageOut = pygame.Surface((needleW, needleH))
-    imageOut.fill(0xFFFF00)
-    imageOut.set_colorkey(0xFFFF00)
+    imageOut.fill( overlayColor )
+    imageOut.set_colorkey( overlayColor )
     imageOut.blit(image, (needleW/2 -w/2 +oX, needleH/2 -h/2 +oY), pygame.Rect(x,y,w,h))
     return imageOut
+
+def drawOnScreen(screen, obj, size, pos) -> None:
+    obj.set_colorkey( overlayColor )
+    screen.blit( pygame.transform.scale( obj, size), pos )
 
 class Hand():
     def __init__(self, initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg, skin):

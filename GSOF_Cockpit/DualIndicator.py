@@ -4,7 +4,7 @@
 import os
 import pygame
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.GraphicsLib import rotate, Hand
+from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen
 
 class DualIndicator(SingleIndicator):
     """Dual-Indicator dial (Like Altmeter)"""
@@ -75,5 +75,4 @@ class DualIndicator(SingleIndicator):
         #self._overlay(handA, 0, 0)                                   #< Overlay hand on body 
         self._overlay(handB, 0, 0)                                   #< Overlay hand on body 
         if draw == True:
-            self._dial.set_colorkey(0xFFFF00)
-            self._screen.blit( pygame.transform.scale( self._dial, (self.w, self.h)), self.pos )
+            drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos )

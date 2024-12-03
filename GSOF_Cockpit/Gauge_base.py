@@ -3,6 +3,7 @@
 
 import math
 import pygame
+from GSOF_Cockpit import GraphicsLib as Lib
 
 class Gauge():
    """Generic gauge with single input variable"""
@@ -59,5 +60,4 @@ class Gauge():
       if self._icon != None:
          self._overlay(self._icon ,self._iconX ,self._iconY) #< Overlay icon on dial at x,y
       if draw == True:
-         self._dial.set_colorkey(0xFFFF00)
-         self._screen.blit( pygame.transform.scale( self._dial, (self.w, self.h)), self.pos )
+         Lib.drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos)
