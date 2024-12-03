@@ -8,7 +8,7 @@
 
 import sys, math, random
 import pygame
-#from GSOF_Cockpit import ArtificialHorizon as AH
+##from GSOF_Cockpit import ArtificialHorizon as AH
 #from GSOF_Cockpit import TurnCoordinator as TC
 from GSOF_Cockpit import Battery as BAT
 from GSOF_Cockpit import SingleIndicator as SI
@@ -137,10 +137,10 @@ class DemoCockpit():
                                modulu_deg  = 360)
 
       self.alt = DI.DualIndicator( self.screen, pos=alt_pos, size=alt_size,
-#                                   bodyImage  = pygame.image.load('skin/Alt_Meter200.png'),
-#                                   handAImage = pygame.image.load('skin/Alt_Meter200_L_Needle.png'),
-#                                   handAImage = pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
-#                                   iconImage  = pygame.image.load('skin/Alt_Meter200_Null.png'),
+##                                   bodyImage  = pygame.image.load('skin/Alt_Meter200.png'),
+##                                   handAImage = pygame.image.load('skin/Alt_Meter200_L_Needle.png'),
+##                                   handAImage = pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
+##                                   iconImage  = pygame.image.load('skin/Alt_Meter200_Null.png'),
 
                                    inputGain   = 1.0,        #< Input scaling is applied before offeset
                                    inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
@@ -167,22 +167,26 @@ class DemoCockpit():
                                      minMax_deg  = (-90,270),
                                      modulu_deg  = 360)
 
-##      self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
-##                                  bodyImage   = pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
-##                                  handAImage  = pygame.image.load('%s/resources/HeadingWheel.png'%folder),
-##                                  handBImage  = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-##                                  #iconImage   = pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
-##                                           },
-##                                  aDegModulu = 360,
-##                                  bDegModulu = 360,
-##                                  aDegOffset = 0,
-##                                  bDegOffset = 0,
-##                                  aToDeg     = -1,
-##                                  bToDeg     = -1,
-##                                  aMinMax    = None,
-##                                  bMinMax    = None,
-##                                  aKp        = 0.5,
-##                                  bKp        = 1)
+      self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
+                                    bodyImage   = pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
+                                    handAImage  = pygame.image.load('%s/resources/HeadingWheel.png'%folder),
+                                    handBImage  = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
+##                                    iconImage   = pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
+
+##                                    ###Example for using default coefficiants
+##                                    inputOffset = 0,
+##                                    kp          = 0.8,
+
+##                                    inputAtoDeg = -1,
+##                                    offsetA_deg = 0,
+##                                    minMaxA_deg = None,
+##                                    moduluA_deg = 360,
+
+##                                    inputBtoDeg = -1,
+##                                    offsetB_deg = 0,
+##                                    minMaxB_deg = None,
+##                                    moduluB_deg = 360
+                                    )
 
       self.g = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
                              bodyImage   = pygame.image.load('%s/skin/G_Meter200.png'%folder),
@@ -227,7 +231,7 @@ class DemoCockpit():
          self.rfSignal.update(data_stream['TX_fr_sucsess'],t)
          self.alt.update(rf_data['RX_alt'], rf_data['RX_alt'])
          self.vsi.update(rf_data['RX_vsi'])
-##         self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
+         self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
 ##         self.steeringWheel.update( data_stream['RX_G'] )
          
@@ -249,7 +253,7 @@ class DemoCockpit():
          self.rfSignal.draw()
          self.alt.draw()
          self.vsi.draw()
-##         self.head.draw()
+         self.head.draw()
          self.g.draw()
 ##         self.steeringWheel.draw()
 
