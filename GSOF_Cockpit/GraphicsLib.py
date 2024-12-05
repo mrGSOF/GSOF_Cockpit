@@ -55,33 +55,78 @@ def drawOnScreen(screen, obj, size, pos) -> None:
     obj.set_colorkey( overlayColor )
     screen.blit( pygame.transform.scale( obj, size), pos )
 
-class Hand():
-    def __init__(self, initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg, skin):
-      self.val_Z1     = initVal
-      self.offset     = offset
-      self.gain       = gain
-      self.kp         = kp
-      self.toDeg      = toDeg
-      self.offset_deg = offset_deg
-      self.minMax_deg = minMax_deg
-      self.modulu_deg = modulu_deg
-      self.skin       = skin
-      self.update(self.val_Z1)
+class InputX():
+    def __init__(self, initVal, offset, gain, kp, toAu, offset_au, minMax_au, modulu_au):
+        self.val_Z1    = initVal
+        self.offset    = offset
+        self.gain      = gain
+        self.kp        = kp
+        self.toAu      = toAu
+        self.offset_au = offset_au
+        self.minMax_au = minMax_au
+        self.modulu_au = modulu_au
+        self.update(self.val_Z1)
 
     def update(self, val) -> None:
         val = val*self.gain +self.offset
         self.val_Z1 += (val -self.val_Z1)*self.kp
-        self._updateAngle()
+        self._updateMovement()
 
-    def _updateAngle(self, val=None):
+    def _updateMovement(self, val=None):
         if val == None:
             val = self.val_Z1
-        angle = val*self.toDeg +self.offset_deg
+        pos = val*self.toAu +self.offset_au
 
-        if self.minMax_deg != None:
-            Min, Max = self.minMax_deg
-            if angle > Max:
-                angle = Max
-            elif angle < Min:
-                angle = Min
-        self.angle_deg = math.fmod(angle, self.modulu_deg)
+        if self.minMax_au != None:
+            Min, Max = self.minMax_au
+            if pos > Max:
+                pos = Max
+            elif pos < Min:
+                pos = Min
+        self.pos_au = math.fmod(pos, self.modulu_au)
+
+class InputXY():
+    """Manimulate the skin using two variables (X,Y)"""
+    def __init__(self,
+                 initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
+                 initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 ):
+        self.inX = Input(initValX, offsetX, gainX, kpX, toDegX, offsetX_deg, minMaxX_deg, moduluX_deg)
+        self.inY = Input(initValY, offsetY, gainY, kpY, toDegY, offsetY_deg, minMaxY_deg, moduluY_deg)
+
+    def update(self, valX, valY) -> None:
+        self.inX.update(valX)
+        self.inY.update(valY)
+
+class InputRXY(InputXY):
+    """Three degree of freedom input (R,X,Y)"""
+    def __init__(self,
+                 initValR, offsetR, gainR, kpR, toAuR, offsetR_au, minMaxR_au, moduluR_au,
+                 initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
+                 initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 ):
+        super().__init__(initValX, offsetX, gainX, kpX, toDegX, offsetX_deg, minMaxX_deg, moduluX_deg,
+                         initValY, offsetY, gainY, kpY, toDegY, offsetY_deg, minMaxY_deg, moduluY_deg)
+        self.inR = Input(initValR, offsetR, gainR, kpR, toDegR, offsetR_deg, minMaxR_deg, moduluR_deg)
+
+    def update(self, valR, valX, valY) -> None:
+        super().update(valX, valY)
+        self.inR.update(valR)
+
+class Hand(InputX):
+    def __init__(self, initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg, skin):
+        super().__init__(initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg)
+        self.skin = skin
+
+    def _updateMovement(self, val=None):
+        super()._updateMovement(val)
+        self.angle_deg = self.pos_au
+
+class MapRXY(InputRXY):
+    """Manimulate the skin using three variables, R,X,Y"""
+    def __init__(self, skin,
+                 initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
+                 initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 ):
+        super().__init__(initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg)
+        self.skin = skin
