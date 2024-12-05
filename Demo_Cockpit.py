@@ -11,6 +11,7 @@ import pygame
 ##from GSOF_Cockpit import ArtificialHorizon as AH
 #from GSOF_Cockpit import TurnCoordinator as TC
 from GSOF_Cockpit import Battery as BAT
+from GSOF_Cockpit import AltMeter_Analog as ALT
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -80,36 +81,35 @@ class DemoCockpit():
 ##                                  )
       self.engine = [0]*4
       self.engine[0] = SI.SingleIndicator( self.screen, pos=engine_pos[0], size=engine_size,
-                                     bodyImage   = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-                                     handImage   = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-                                     inputGain   = 1.0,        #< Input scaling is applied before offeset
-                                     inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
-                                     kp          = 0.8,        #< Low pass filter coefficiant (1.0 no filter)
-                                     inputToDeg  = -180.0/100, #< Input value to degrees factor applied after offset
-                                     offset_deg  = 0,          #< Angle of indicator at zero input (deg)
-                                     minMax_deg  = (-180,0),   #< Indicator angle min/max (deg)
-                                     modulu_deg  = 360)        #< Modulu for indicator angle (deg)
+                                           bodyImage   = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
+                                           handImage   = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
+                                           inputGain   = 1.0,        #< Input scaling is applied before offeset
+                                           inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
+                                           kp          = 0.8,        #< Low pass filter coefficiant (1.0 no filter)
+                                           inputToDeg  = -180.0/100, #< Input value to degrees factor applied after offset
+                                           offset_deg  = 0,          #< Angle of indicator at zero input (deg)
+                                           minMax_deg  = (-180,0),   #< Indicator angle min/max (deg)
+                                           modulu_deg  = 360)        #< Modulu for indicator angle (deg)
 
       self.engine[1] = DI.DualIndicator( self.screen, pos=engine_pos[1], size=engine_size,
-                                          bodyImage  = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-                                          handAImage = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-                                          handBImage = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-                                          #iconImage  = pygame.image.load('resources/Alt_Meter200_Null.png'),
+                                         bodyImage  = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
+                                         handAImage = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
+                                         handBImage = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
+                                         #iconImage  = pygame.image.load('resources/Alt_Meter200_Null.png'),
 
-                                          inputGain   = 1.0,        #< Input scaling is applied before offeset
-                                          inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
-                                          kp          = 0.8,        #< Filter coefficiant (0-no filter)
+                                         inputGain   = 1.0,        #< Input scaling is applied before offeset
+                                         inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
+                                         kp          = 0.8,        #< Filter coefficiant (0-no filter)
 
-                                          inputAtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                          offsetA_deg = 0,          #< Input offeset is added to input value before scale factor
-                                          minMaxA_deg = (-180,0),   #< Indicator angle min/max (deg)
-                                          moduluA_deg = 360,        #< Modulu for indicator angle (deg)
+                                         inputAtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
+                                         offsetA_deg = 0,          #< Input offeset is added to input value before scale factor
+                                         minMaxA_deg = (-180,0),   #< Indicator angle min/max (deg)
+                                         moduluA_deg = 360,        #< Modulu for indicator angle (deg)
 
-                                          inputBtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                          offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
-                                          minMaxB_deg = (-360,180), #< Indicator angle min/max (deg)
-                                          moduluB_deg = 360         #< Modulu for indicator angle (deg)
-                                          )
+                                         inputBtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
+                                         offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
+                                         minMaxB_deg = (-360,180), #< Indicator angle min/max (deg)
+                                         moduluB_deg = 360)        #< Modulu for indicator angle (deg)
 
       self.engine[2] = SI.SingleIndicator( self.screen, pos=engine_pos[2], size=engine_size )
       self.engine[3] = SI.SingleIndicator( self.screen, pos=engine_pos[3], size=engine_size )
@@ -136,26 +136,11 @@ class DemoCockpit():
                                minMax_deg  = (-160,160),   #< Limits of indicator before applying offset
                                modulu_deg  = 360)
 
-      self.alt = DI.DualIndicator( self.screen, pos=alt_pos, size=alt_size,
-##                                   bodyImage  = pygame.image.load('skin/Alt_Meter200.png'),
-##                                   handAImage = pygame.image.load('skin/Alt_Meter200_L_Needle.png'),
-##                                   handAImage = pygame.image.load('skin/Alt_Meter200_S_Needle.png'),
-##                                   iconImage  = pygame.image.load('skin/Alt_Meter200_Null.png'),
-
-                                   inputGain   = 1.0,        #< Input scaling is applied before offeset
-                                   inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
-                                   kp          = 1.0,        #< Filter coefficiant (0-no filter)
-
-                                   inputAtoDeg = -360.0/1000, #< Input value to degrees factor applied after offset
-                                   offsetA_deg = 0,           #< Input offeset is added to input value before scale factor
-                                   minMaxA_deg = None,        #< Indicator angle min/max (deg)
-                                   moduluA_deg = 360,         #< Modulu for indicator angle (deg)
-
-                                   inputBtoDeg = -36.0/1000,  #< Input value to degrees factor applied after offset
-                                   offsetB_deg = 0,           #< Input offeset is added to input value before scale factor
-                                   minMaxB_deg = None,        #< Indicator angle min/max (deg)
-                                   moduluB_deg = 360          #< Modulu for indicator angle (deg)
-                                 )
+      self.alt = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size,
+                               bodyImage  = pygame.image.load('%s/skin/Alt_Meter200.png'%folder),
+                               handAImage = pygame.image.load('%s/skin/Alt_Meter200_L_Needle.png'%folder),
+                               handBImage = pygame.image.load('%s/skin/Alt_Meter200_S_Needle.png'%folder),
+                              )
                                  
       self.vsi = SI.SingleIndicator( self.screen, pos=vsi_pos, size=vsi_size,
                                      bodyImage   = pygame.image.load('%s/resources/VerticalSpeedIndicator_Background.png'%folder),
