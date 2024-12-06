@@ -7,7 +7,7 @@ from GSOF_Cockpit import GraphicsLib as Lib
 
 class Gauge():
    """Generic gauge with single input variable"""
-   def __init__(self, screen, bodyImage, pos=(0,0), size=(0,0), iconImage=None ):
+   def __init__(self, screen, bodyImage, pos=(0,0), size=(0,0)):
       """
       pos = Position of top left corner of the dial (x,y)
       size = Width and height of dial (w,h)
@@ -15,7 +15,7 @@ class Gauge():
       self._screen = screen
       self._body   = bodyImage.convert()
       self._dial   = pygame.Surface(self._body.get_rect()[2:4])
-      self._icon   = iconImage
+      self._icon   = None
       self._dial.fill(0xFFFF00)
 
       self.x, self.y = pos

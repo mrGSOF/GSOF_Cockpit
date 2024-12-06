@@ -91,27 +91,27 @@ class InputXY():
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
                  ):
-        self.inX = Input(initValX, offsetX, gainX, kpX, toDegX, offsetX_deg, minMaxX_deg, moduluX_deg)
-        self.inY = Input(initValY, offsetY, gainY, kpY, toDegY, offsetY_deg, minMaxY_deg, moduluY_deg)
+        self.inX = InputX(initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au)
+        self.inY = InputX(initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au)
 
     def update(self, valX, valY) -> None:
         self.inX.update(valX)
         self.inY.update(valY)
 
-class InputRXY(InputXY):
+class InputXYZ(InputXY):
     """Three degree of freedom input (R,X,Y)"""
     def __init__(self,
-                 initValR, offsetR, gainR, kpR, toAuR, offsetR_au, minMaxR_au, moduluR_au,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 initValZ, offsetZ, gainZ, kpZ, toAuZ, offsetZ_au, minMaxZ_au, moduluZ_au,
                  ):
-        super().__init__(initValX, offsetX, gainX, kpX, toDegX, offsetX_deg, minMaxX_deg, moduluX_deg,
-                         initValY, offsetY, gainY, kpY, toDegY, offsetY_deg, minMaxY_deg, moduluY_deg)
-        self.inR = Input(initValR, offsetR, gainR, kpR, toDegR, offsetR_deg, minMaxR_deg, moduluR_deg)
+        super().__init__(initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
+                         initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au)
+        self.inZ = Input(initValZ, offsetZ, gainZ, kpZ, toAuZ, offsetZ_au, minMaxZ_au, moduluZ_au)
 
-    def update(self, valR, valX, valY) -> None:
+    def update(self, valX, valY, valZ) -> None:
         super().update(valX, valY)
-        self.inR.update(valR)
+        self.inZ.update(valZ)
 
 class Hand(InputX):
     def __init__(self, initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg, skin):
@@ -122,11 +122,12 @@ class Hand(InputX):
         super()._updateMovement(val)
         self.angle_deg = self.pos_au
 
-class MapRXY(InputRXY):
+class MapRXY(InputXYZ):
     """Manimulate the skin using three variables, R,X,Y"""
     def __init__(self, skin,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 initValZ, offsetZ, gainZ, kpZ, toAuZ, offsetZ_au, minMaxZ_au, moduluZ_au,
                  ):
         super().__init__(initVal, offset, gain, kp, toDeg, offset_deg, minMax_deg, modulu_deg)
         self.skin = skin

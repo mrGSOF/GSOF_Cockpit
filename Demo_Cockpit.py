@@ -8,7 +8,7 @@
 
 import sys, math, random
 import pygame
-##from GSOF_Cockpit import ArtificialHorizon as AH
+from GSOF_Cockpit import ArtificialHorizon as AH
 #from GSOF_Cockpit import TurnCoordinator as TC
 from GSOF_Cockpit import Battery as BAT
 from GSOF_Cockpit import AltMeter_Analog as ALT
@@ -62,14 +62,8 @@ class DemoCockpit():
 
       ###Initialise the gauges.
       self.background = TEXT.TextCtrl( GUIobj=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
-##      self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size,
-##                                   coefList={'RollToDeg':1,   #< Use 360.0/6.28, #When input is in (Rad)
-##                                             'RollOffset':1,  #< Use 360.0/6.28, #when input is in (Rad)
-##                                             'PitchToDeg':1,  #< Use 360.0/6.28, #when input is in (Rad)
-##                                             'PitchOffset':1, #< Use 360.0/6.28, #when input is in (Rad)
-##                                             'Kp':0.5,        #< Filter coefficiant
-##                                             }
-##                                   )
+      self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
+
 ##      self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
 ##                                  coefList={'Turn_Kp':0.2,                #< Filter coefficiant
 ##                                            'TurnRateDegMinMax':(-45,45), #< deg
@@ -204,7 +198,7 @@ class DemoCockpit():
          Also each dial can have a behaviour model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
          """
          # Update dials.
-##         self.horizon.update(rf_data['RX_est_x'], data_stream['RX_est_y'] )
+         self.horizon.update(rf_data['RX_est_x'], data_stream['RX_est_y'] )
 ##         self.turn.update((-rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4)
          self.engine[0].update(data_stream['RX_eng'])
          self.engine[1].update(val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'])
