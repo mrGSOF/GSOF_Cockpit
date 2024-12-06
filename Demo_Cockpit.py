@@ -220,7 +220,7 @@ class DemoCockpit():
          The update method should be called before this method inorder to update the dials values.
          """
          self.background.draw()
-##         self.horizon.draw()
+         self.horizon.draw()
 ##         self.turn.draw()
          self.engine[0].draw()
          self.engine[1].draw()

@@ -4,7 +4,7 @@
 import os
 import pygame
 from GSOF_Cockpit.Gauge_base import Gauge
-from GSOF_Cockpit.GraphicsLib import InputXY
+from GSOF_Cockpit.GraphicsLib import InputXY, clip, rotate
 class ArtificialHorizon(Gauge):
     """Artificial horizon dial"""
     def __init__(self, screen, pos=(0,0), size=(0,0),
@@ -29,7 +29,8 @@ class ArtificialHorizon(Gauge):
 
        super().__init__(screen,
                         bodyImage = bodyImage,
-                        pos=pos, size=size)#.setIcon(birdImage, x=0, y=0)
+                        pos=pos, size=size)
+       self.setIcon(birdImage, x=0, y=0)
        self.inXY = InputXY(initValX=0, offsetX=rollOffset,  gainX=1, kpX=rollKp,  toAuX=rollToDeg,  offsetX_au=0, minMaxX_au=None, moduluX_au=360,
                            initValY=0, offsetY=pitchOffset, gainY=1, kpY=pitchKp, toAuY=pitchToDeg, offsetY_au=0, minMaxY_au=None, moduluY_au=360)
        self._ball = ballImage
@@ -51,10 +52,12 @@ class ArtificialHorizon(Gauge):
         """Called to draw an Artificial horizon dial"""
         roll  = int(self.inXY.inX.pos_au)
         pitch = int(self.inXY.inY.pos_au)
-        super().draw(draw=False)                                          #< Draw body and maquette
-        tmpBall = self.clip(self._ball, 0, (59-pitch)*720/180, 250, 250)  #< Pitch
-        tmpBall = self.rotate(tmpBall, roll)                              #< Roll
+        tmpBall = clip(self._ball, 0, (59-pitch)*720/180, 250, 250)  #< Pitch
+        tmpBall = rotate(tmpBall, roll)                              #< Roll
         self._overlay(tmpBall, 0, 0)
-        #self._overlay(self._body, 0,0)
+        self._overlay(self._body, 0,0)
+        if self._icon != None:
+            self._overlay(self._icon ,self._iconX ,self._iconY)      #< Overlay the bird icon on gauge
+        self._dial.set_colorkey(0xFFFF00)
         if draw == True:
             self._screen.blit( pygame.transform.scale(self._dial,(self.w,self.h)), self.pos )
