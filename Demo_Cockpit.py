@@ -9,7 +9,7 @@
 import sys, math, random
 import pygame
 from GSOF_Cockpit import ArtificialHorizon as AH
-#from GSOF_Cockpit import TurnCoordinator as TC
+from GSOF_Cockpit import TurnCoordinator_Analog as TC
 from GSOF_Cockpit import Battery as BAT
 from GSOF_Cockpit import AltMeter_Analog as ALT
 from GSOF_Cockpit import SingleIndicator as SI
@@ -64,15 +64,14 @@ class DemoCockpit():
       self.background = TEXT.TextCtrl( GUIobj=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
       self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
 
-##      self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
-##                                  coefList={'Turn_Kp':0.2,                #< Filter coefficiant
-##                                            'TurnRateDegMinMax':(-45,45), #< deg
-##                                            'TurnRateToDeg':1,            #< Use 360.0/6.28, #When input is in (Rad)
-##                                            'SideAcc_Kp':0.3,             #< Filter coefficiant
-##                                            'SlipDegMinMax':(-14,14),     #< deg
-##                                            'SlipToDeg':1,                #< Use 360.0/6.28, #When input is in (Rad)
-##                                            }
-##                                  )
+      self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
+                                turnRateToDeg      = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
+                                turnRateKp         = 0.2,      #< Filter coefficiant
+                                turnRateMinMax_deg = (-45,45), #< deg
+                                slipToDeg          = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
+                                slipKp             = 0.3,      #< Filter coefficiant
+                                slipMinMax_deg     = (-14,14), #< deg
+                              )
       self.engine = [0]*4
       self.engine[0] = SI.SingleIndicator( self.screen, pos=engine_pos[0], size=engine_size,
                                            bodyImage   = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
@@ -198,18 +197,18 @@ class DemoCockpit():
          Also each dial can have a behaviour model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
          """
          # Update dials.
-         self.horizon.update(rf_data['RX_est_x'], data_stream['RX_est_y'] )
-##         self.turn.update((-rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4)
-         self.engine[0].update(data_stream['RX_eng'])
-         self.engine[1].update(val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'])
-         self.engine[2].update(data_stream['RX_eng'])
-         self.engine[3].update(data_stream['RX_eng'])
-         self.Vbat.update(data_stream['RX_batt_volt'])
-         self.Ibat.update(data_stream['RX_batt_cur'])
-         #self.rfSignal.update(data_stream['RX_fr_sucsess'], data_stream['TX_fr_sucsess'],a)
-         self.rfSignal.update(data_stream['TX_fr_sucsess'],t)
-         self.alt.update(rf_data['RX_alt'], rf_data['RX_alt'])
-         self.vsi.update(rf_data['RX_vsi'])
+         self.horizon.update( rf_data['RX_est_x'], data_stream['RX_est_y'] )
+         self.turn.update( (-rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
+         self.engine[0].update( data_stream['RX_eng'] )
+         self.engine[1].update( val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'] )
+         self.engine[2].update( data_stream['RX_eng'] )
+         self.engine[3].update( data_stream['RX_eng'] )
+         self.Vbat.update( data_stream['RX_batt_volt'] )
+         self.Ibat.update( data_stream['RX_batt_cur'] )
+         #self.rfSignal.update( data_stream['RX_fr_sucsess'], data_stream['TX_fr_sucsess'], a )
+         self.rfSignal.update( data_stream['TX_fr_sucsess'],t )
+         self.alt.update( rf_data['RX_alt'], rf_data['RX_alt'] )
+         self.vsi.update( rf_data['RX_vsi'] )
          self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
 ##         self.steeringWheel.update( data_stream['RX_G'] )
@@ -221,7 +220,7 @@ class DemoCockpit():
          """
          self.background.draw()
          self.horizon.draw()
-##         self.turn.draw()
+         self.turn.draw()
          self.engine[0].draw()
          self.engine[1].draw()
          self.engine[2].draw()

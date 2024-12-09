@@ -36,7 +36,7 @@ class SingleIndicator(Gauge):
                            modulu_deg  = modulu_deg,
                            skin        = handImage
                            )
-        self.update(val=initVal)
+        SingleIndicator.update(self, val=initVal)
 
     def update(self, val):
         """Update the angle of the indicator's hand"""

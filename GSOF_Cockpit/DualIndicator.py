@@ -55,24 +55,16 @@ class DualIndicator(SingleIndicator):
     def update(self, val, valB=None):
         """Update the angle of two hands"""
         super().update(val)
+        SingleIndicator.update(self, val)
         if valB == None:
             valB = val
         self._handB.update(valB)
 
     def draw(self, draw=True):
-        """
-        Called to draw a Turn Coordinator dial.
-        "angleX" and "angleY" are the inputs.
-        "screen" is the surface to draw the dial on.       
-        """
+        """screen" is the surface to draw the dial on"""
         super().draw(draw=False)
 
-#        self._overlay(self._body, 0,0)                               #< Overlay on the body
-#        if iconLayer != None:
-#            self._overlay(iconLayer[0] ,iconLayer[1] ,iconLayer[2])  #< Overlay an icon in x,y
-        #handA = rotate(self._handA.skin, int(self._handA.angle_deg)) #< Rotate the hand
         handB = rotate(self._handB.skin, int(self._handB.angle_deg)) #< Rotate the hand
-        #self._overlay(handA, 0, 0)                                   #< Overlay hand on body 
         self._overlay(handB, 0, 0)                                   #< Overlay hand on body 
         if draw == True:
             drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos )
