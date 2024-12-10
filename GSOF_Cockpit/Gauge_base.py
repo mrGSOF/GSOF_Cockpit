@@ -28,6 +28,9 @@ class Gauge():
       self.pos = self._dial.get_rect()
       self.pos = self.pos.move( *pos )
 
+   def changeIcon(self, iconImage):
+      self._icon  = iconImage
+
    def setIcon(self, iconImage, x, y):
       self._icon  = iconImage
       self._iconX = x
