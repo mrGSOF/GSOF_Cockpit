@@ -5,6 +5,7 @@ import os
 import pygame
 from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.GraphicsLib import InputXY, clip, rotate
+
 class ArtificialHorizon(Gauge):
     """Artificial horizon dial"""
     def __init__(self, screen, pos=(0,0), size=(0,0),
@@ -19,13 +20,13 @@ class ArtificialHorizon(Gauge):
        """Artificial horizon gauge. Default size of 300px can be overidden using w,h"""
        path = os.path.dirname(__file__)
        if bodyImage == None:
-            bodyImage = pygame.image.load(os.path.join(path, 'resources/Horizon_Background.png')).convert()
+            bodyImage = pygame.image.load(os.path.join(path, '../resources/Horizon_Background.png')).convert()
 
        if ballImage == None:
-           ballImage = pygame.image.load(os.path.join(path, 'resources/Horizon_GroundSky.png')).convert()
+           ballImage = pygame.image.load(os.path.join(path, '../resources/Horizon_GroundSky.png')).convert()
 
        if birdImage == None:
-           birdImage = pygame.image.load(os.path.join(path, 'resources/Maquette_Avion.png')).convert()
+           birdImage = pygame.image.load(os.path.join(path, '../resources/Maquette_Avion.png')).convert()
 
        super().__init__(screen,
                         bodyImage = bodyImage,
