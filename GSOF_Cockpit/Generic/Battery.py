@@ -9,12 +9,9 @@ class Battery(SingleIndicator):
    """Battery dial"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
                 bodyImage=None, legendImage=None, iconImage=None, handImage=None,
-                inputOffset = 0,
-                kp          = 0.8,
-                minMax_deg  = (-135,135),
-                offset_deg  = +135,
-                inputToDeg  = 1,
-                modulu_deg  = 360):
+                inputMin = 0,
+                inputMax = 100,
+                kp       = 0.8):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
@@ -29,10 +26,9 @@ class Battery(SingleIndicator):
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,
                        handImage   = handImage,
-                       inputOffset = inputOffset,
+                       inputOffset = -inputMin,
                        kp          = kp,
-                       inputToDeg  = inputToDeg,
-                       offset_deg  = offset_deg,
-                       minMax_deg  = minMax_deg,
-                       modulu_deg  = modulu_deg)
-      self.setIcon(iconImage=iconImage, x=0, y=100)      
+                       inputToDeg  = -270/(inputMax -inputMin),
+                       offset_deg  = 160,
+                       minMax_deg  = (-160, 160))
+      self.setIcon(iconImage=iconImage, x=0, y=100) #< The battery icon     
