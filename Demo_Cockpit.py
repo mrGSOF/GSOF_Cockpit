@@ -6,7 +6,7 @@
  * Copyright (C) 2023 Guy Soffer
 """
 
-import sys, math, random
+import sys, math, random, time
 import pygame
 from GSOF_Cockpit.Automotive import SteeringWheel as SW
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
@@ -24,7 +24,7 @@ from GSOF_Cockpit import Text_Widget as TEXT
 from GSOF_Cockpit import Pygame_Colors as COLOR
 
 class DemoCockpit():
-   def __init__(self, screen, pos=(0,0), scale=1.0, colorBG=(0,0,0), gap=0, folder='./'):
+   def __init__(self, screen, pos=(0,0), scale=1.0, colorBG=COLOR.BLACK, gap=0, folder='./'):
       
       self.screen = screen
       self.colorBG = colorBG
@@ -153,8 +153,8 @@ class DemoCockpit():
          Also each dial can have a behaviour model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
          """
          # Update dials.
-         self.horizon.update( rf_data['RX_est_x'], data_stream['RX_est_y'] )
-         self.turn.update( (-rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
+         self.horizon.update( -rf_data['RX_est_x'], -data_stream['RX_est_y'] )
+         self.turn.update( (rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
          self.engine[0].update( data_stream['RX_eng'] )
          self.engine[1].update( val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'] )
          self.engine[2].update( data_stream['RX_eng'] )
@@ -192,7 +192,7 @@ class DemoCockpit():
 #         self.steeringWheel.draw()
 
 # Initialise screen.
-BG_color = (0x22,0x22,0x22)
+BG_color = COLOR.DARK
 screen_size=(600,450)
 pygame.init()
 screen = pygame.display.set_mode(screen_size)
@@ -212,6 +212,8 @@ test = 1
 alt = 0
 g = 9.8
 vsi = 5
+clock = pygame.time.Clock()
+
 while True:
    # Main program loop.
    for event in pygame.event.get():
@@ -222,17 +224,13 @@ while True:
    if(test):
       # Use dummy test data
       curPos = pygame.mouse.get_pos()
-      
       rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_sucsess':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
                  'RX_batt_cur':Ibat, 'TX_fr_sucsess':c, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                  'RX_head':60*math.sin(6.28*0.01*t), 'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                  'RX_vsi':vsi*math.sin(6.28*0.01*t)}
       
-      pygame.time.delay(30)
-
       if(rf_data):
          # We have data.
-         #print(rf_data)
          t+=1
          b+=1
          c+=2
@@ -243,7 +241,10 @@ while True:
          Ibat %= 6.5
          alt += 10
 
-         # Update dials.
+         # Update gauges
+         T0 = time.time()
          Cockpit.update(rf_data)
          Cockpit.draw()
          pygame.display.update()
+         #print("%1.1f ms"%(1000*(time.time()-T0)))
+         clock.tick(30)
