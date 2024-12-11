@@ -14,6 +14,7 @@ from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
+from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -76,25 +77,7 @@ class DemoCockpit():
                               )
       self.engine = [0]*4
       self.engine[0] = COMP.Percentage(self.screen, pos=engine_pos[0], size=engine_size)
-      self.engine[1] = DI.DualIndicator( self.screen, pos=engine_pos[1], size=engine_size,
-                                         bodyImage  = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-                                         handAImage = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-                                         handBImage = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-                                         #iconImage  = pygame.image.load('resources/Alt_Meter200_Null.png'),
-
-                                         inputGain   = 1.0,        #< Input scaling is applied before offeset
-                                         inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
-                                         kp          = 0.8,        #< Filter coefficiant (0-no filter)
-
-                                         inputAtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                         offsetA_deg = 0,          #< Input offeset is added to input value before scale factor
-                                         minMaxA_deg = (-180,0),   #< Indicator angle min/max (deg)
-                                         moduluA_deg = 360,        #< Modulu for indicator angle (deg)
-
-                                         inputBtoDeg = -180.0/100, #< Input value to degrees factor applied after offset
-                                         offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
-                                         minMaxB_deg = (-360,180), #< Indicator angle min/max (deg)
-                                         moduluB_deg = 360)        #< Modulu for indicator angle (deg)
+      self.engine[1] = SPFB.SetPointVsFeedbackFill(self.screen, pos=engine_pos[1], size=engine_size)
       self.engine[2] = COMP.PercentageFill(self.screen, pos=engine_pos[2], size=engine_size)
       self.engine[3] = COMP.PercentageFill(self.screen, pos=engine_pos[3], size=engine_size)
 

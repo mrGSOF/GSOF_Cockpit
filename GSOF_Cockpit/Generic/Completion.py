@@ -8,7 +8,7 @@ from GSOF_Cockpit.SingleIndicator import SingleIndicator
 class PercentageFill(SingleIndicator):
    """Percentage dial with fill mark and maximum rabge of 180 degrees"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
-                bodyImage=None, iconImage=None, handImage=None,
+                bodyImage=None, handImage=None,
                 inputGain = 1.0,
                 inputOffset = 0.0,
                 inputMin = 0,
@@ -34,7 +34,7 @@ class PercentageFill(SingleIndicator):
 class Percentage(SingleIndicator):
    """Percentage dial with needle and full turn range (360 degree)"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
-                bodyImage=None, iconImage=None, handImage=None,
+                bodyImage=None, handImage=None,
                 inputGain = 1.0,
                 inputOffset = 0.0,
                 inputMin = 0,
