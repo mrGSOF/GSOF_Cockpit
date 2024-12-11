@@ -13,6 +13,7 @@ from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Generic import Battery as BAT
+from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -74,17 +75,7 @@ class DemoCockpit():
                                 slipMinMax_deg     = (-14,14), #< deg
                               )
       self.engine = [0]*4
-      self.engine[0] = SI.SingleIndicator( self.screen, pos=engine_pos[0], size=engine_size,
-                                           bodyImage   = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
-                                           handImage   = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
-                                           inputGain   = 1.0,        #< Input scaling is applied before offeset
-                                           inputOffset = 0.0,        #< Input offeset is added to input value afterscale factor
-                                           kp          = 0.8,        #< Low pass filter coefficiant (1.0 no filter)
-                                           inputToDeg  = -180.0/100, #< Input value to degrees factor applied after offset
-                                           offset_deg  = 0,          #< Angle of indicator at zero input (deg)
-                                           minMax_deg  = (-180,0),   #< Indicator angle min/max (deg)
-                                           modulu_deg  = 360)        #< Modulu for indicator angle (deg)
-
+      self.engine[0] = COMP.Percentage(self.screen, pos=engine_pos[0], size=engine_size)
       self.engine[1] = DI.DualIndicator( self.screen, pos=engine_pos[1], size=engine_size,
                                          bodyImage  = pygame.image.load('%s/resources/EngineIndicator_Background.png'%folder),
                                          handAImage = pygame.image.load('%s/resources/EngineIndicator_Needle.png'%folder),
@@ -104,31 +95,20 @@ class DemoCockpit():
                                          offsetB_deg = 180,        #< Input offeset is added to input value before scale factor
                                          minMaxB_deg = (-360,180), #< Indicator angle min/max (deg)
                                          moduluB_deg = 360)        #< Modulu for indicator angle (deg)
-
-      self.engine[2] = SI.SingleIndicator( self.screen, pos=engine_pos[2], size=engine_size )
-      self.engine[3] = SI.SingleIndicator( self.screen, pos=engine_pos[3], size=engine_size )
+      self.engine[2] = COMP.PercentageFill(self.screen, pos=engine_pos[2], size=engine_size)
+      self.engine[3] = COMP.PercentageFill(self.screen, pos=engine_pos[3], size=engine_size)
 
       self.battTitle = TEXT.TextCtrl( GUIobj=self.screen,
                                       pos=BattTitle_pos, size=-1,
                                       color=colorBG, textColor=COLOR.WHITE,
                                       name='<--[V] Batt [A]-->' )
       self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
-                               ###Coefficiants for 3S-LiPo
-                               inputOffset = -9.0,               #< Lowest input voltage indication
-                               kp          = 0.8,
-                               inputToDeg  = -270/(3*(4.2-3.0)), #< Voltage to degree
-                               offset_deg  = 160,                #< Zero point 160 deg CCW from vertical Resting point
-                               minMax_deg  = (-160,160),         #< Limits of indicator before applying offset
-                               modulu_deg  = 360)
+                               inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
+                               inputMax = 3*4.2)             #< Maximum voltageof 3S-Lipo pack
 
       self.Ibat = BAT.Battery( self.screen, pos=txBatt_pos, size=battLevel_size,
-                               ###Coefficiants current up to 6A
-                               inputOffset = 0,            #< Lowest current indication
-                               kp          = 0.8,
-                               inputToDeg  = -270/6.0,     #< Current to degree
-                               offset_deg  = 160,          #< Resting point
-                               minMax_deg  = (-160,160),   #< Limits of indicator before applying offset
-                               modulu_deg  = 360)
+                               inputMin = 0,
+                               inputMax = 6)
 
       self.alt = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size,
                                bodyImage  = pygame.image.load('%s/skin/Alt_Meter200.png'%folder),

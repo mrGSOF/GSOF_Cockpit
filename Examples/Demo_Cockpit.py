@@ -8,10 +8,11 @@
 
 import sys, math, random
 import pygame
-from GSOF_Cockpit import ArtificialHorizon as AH
-from GSOF_Cockpit import TurnCoordinator_Analog as TC
-from GSOF_Cockpit import Battery as BAT
-from GSOF_Cockpit import AltMeter_Analog as ALT
+from GSOF_Cockpit.Automotive import SteeringWheel as SW
+from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
+from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
+from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
+from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -167,8 +168,8 @@ class DemoCockpit():
                                     )
 
       self.g = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
-                             bodyImage   = pygame.image.load('%s/skin/G_Meter200.png'%folder),
-                             handImage   = pygame.image.load('%s/skin/G_Meter_Ind200.png'%folder),
+                             bodyImage   = pygame.image.load('%s/skin/G_Meter.png'%folder),
+                             handImage   = pygame.image.load('%s/skin/G_Meter_Ind.png'%folder),
                              inputOffset = 9.8,
                              kp          = 0.8,
                              inputToDeg  = 4.6,
@@ -176,17 +177,9 @@ class DemoCockpit():
                              minMax_deg  = (-270,270),
                              modulu_deg  = 270)
 
-##      self.steeringWheel = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
-##                             imgList={'Frame':pygame.image.load('%s/skin/Indicator_Background.png'%folder),
-##                                      'Frame_':pygame.image.load('%s/skin/G_Meter200.png'%folder),
-##                                      'Ind':pygame.image.load('%s/skin/SteeringWheel300.png'%folder),
-##                                   },
-##                             inToDeg   = 10.0,
-##                             inOffset  = 9.8,
-##                             kp        = 0.8,
-##                             degMinMax = (-270,270),
-##                             degOffset = 0,
-##                             degModulu = 360)
+      self.steeringWheel = SW.SteeringWheel( self.screen, pos=g_pos, size=g_size,
+                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel02.png'%folder).convert()
+                                             )
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
@@ -211,7 +204,7 @@ class DemoCockpit():
          self.vsi.update( rf_data['RX_vsi'] )
          self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
-##         self.steeringWheel.update( data_stream['RX_G'] )
+         self.steeringWheel.update( data_stream['RX_G'] )
          
    def draw(self):
          """
@@ -233,7 +226,7 @@ class DemoCockpit():
          self.vsi.draw()
          self.head.draw()
          self.g.draw()
-##         self.steeringWheel.draw()
+#         self.steeringWheel.draw()
 
 # Initialise screen.
 BG_color = (0x22,0x22,0x22)
