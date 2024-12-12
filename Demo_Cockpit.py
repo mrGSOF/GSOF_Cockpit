@@ -15,11 +15,11 @@ from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
+from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
 from GSOF_Cockpit import DualPlot as DPn
-from GSOF_Cockpit import Text_Widget as TEXT
 #from GSOF_Cockpit import Button_Widget as BTN
 from GSOF_Cockpit import Pygame_Colors as COLOR
 
@@ -64,7 +64,7 @@ class DemoCockpit():
       g_pos = (head_pos[0] +head_size[0] +gap, head_pos[1])
 
       ###Initialise the gauges.
-      self.background = TEXT.TextCtrl( GUIobj=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
+      self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
       self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
 
       self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
@@ -81,10 +81,10 @@ class DemoCockpit():
       self.engine[2] = COMP.PercentageFill(self.screen, pos=engine_pos[2], size=engine_size)
       self.engine[3] = COMP.PercentageFill(self.screen, pos=engine_pos[3], size=engine_size)
 
-      self.battTitle = TEXT.TextCtrl( GUIobj=self.screen,
-                                      pos=BattTitle_pos, size=-1,
-                                      color=colorBG, textColor=COLOR.WHITE,
-                                      name='<--[V] Batt [A]-->' )
+      self.battTitle = Text( screen=self.screen,
+                             pos=BattTitle_pos, size=None,
+                             color=colorBG, textColor=COLOR.WHITE,
+                             name="<--[V] Batt [A]-->" )
       self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
                                inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
                                inputMax = 3*4.2)             #< Maximum voltageof 3S-Lipo pack
