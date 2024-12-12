@@ -15,6 +15,7 @@ from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
+from GSOF_Cockpit.Button import Button
 from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
@@ -53,10 +54,11 @@ class DemoCockpit():
       engine_pos[1] = ((engine_pos[0])[0], (engine_pos[0])[1] +engine_size[1] +eGap)  #   X
       engine_pos[2] = ((engine_pos[3])[0], (engine_pos[1])[1])                        #[1] [2]
 
-      rfSignal_pos = (turn_pos[0], turn_pos[1] +turn_size[1] +gap)
+      rfSignal_pos  = (turn_pos[0], turn_pos[1] +turn_size[1] +gap)
       BattTitle_pos = ((engine_pos[1])[0], (engine_pos[1])[1] +engine_size[1] +10)
-      rxBatt_pos = (BattTitle_pos[0], BattTitle_pos[1] +BattTitle_size[1] +gap)
-      txBatt_pos = (rxBatt_pos[0] +battLevel_size[0] +eGap, rxBatt_pos[1])
+      rxBatt_pos    = (BattTitle_pos[0], BattTitle_pos[1] +BattTitle_size[1] +gap)
+      txBatt_pos    = (rxBatt_pos[0] +battLevel_size[0] +eGap, rxBatt_pos[1])
+      testBtn_pos   = (rxBatt_pos[0] +10, rxBatt_pos[1] +battLevel_size[1] +10)
       
       alt_pos = (rfSignal_pos[0], rfSignal_pos[1] +rfSignal_size[1] +gap)
       vsi_pos = (alt_pos[0] +alt_size[0] +gap, alt_pos[1])
@@ -85,6 +87,12 @@ class DemoCockpit():
                              pos=BattTitle_pos, size=None,
                              color=colorBG, textColor=COLOR.WHITE,
                              name="<--[V] Batt [A]-->" )
+
+      self.testBtn = Button( screen=self.screen,
+                             pos=testBtn_pos, size=None,
+                             color=COLOR.RED, textColor=COLOR.WHITE,
+                             name="testButton" )
+
       self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
                                inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
                                inputMax = 3*4.2)             #< Maximum voltageof 3S-Lipo pack
@@ -168,12 +176,10 @@ class DemoCockpit():
          self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
          self.steeringWheel.update( data_stream['RX_G'] )
+         self.testBtn.action(mousePos=pygame.mouse.get_pos(), actionBtn=pygame.mouse.get_pressed() )
          
    def draw(self):
-         """
-         Draw all the dials. Usually done every 100 to 30 [ms].
-         The update method should be called before this method inorder to update the dials values.
-         """
+         """Draw all the dials. The update method should be called before to update all gauges"""
          self.background.draw()
          self.horizon.draw()
          self.turn.draw()
@@ -182,6 +188,7 @@ class DemoCockpit():
          self.engine[2].draw()
          self.engine[3].draw()
          self.battTitle.draw()
+         self.testBtn.draw()
          self.Vbat.draw()
          self.Ibat.draw()
          self.rfSignal.draw()

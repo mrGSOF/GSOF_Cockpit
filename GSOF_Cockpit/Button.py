@@ -3,7 +3,7 @@ from GSOF_Cockpit import Pygame_Colors as COLOR
 
 MouseBtnPressed  = 0
 MouseBtnReleased = 1
-MouseEnteredArea = 2
+MouseEnterArea   = 2
 MouseExitArea    = 3
 
 class Button(Text):
@@ -11,11 +11,9 @@ class Button(Text):
                  color=COLOR.GRAY, textColor=COLOR.BLACK,
                  name="Button", font=None,
                  funcEnterArea=None, funcExitArea=None, funcPressed=None, funcReleased=None):
-        super().__init__(screen, pos=(0,0), size=None,
-                 color=COLOR.GRAY, textColor=COLOR.BLACK,
-                 name="Button", font=None)
-        self.overArea = False
-        self.pressed = False
+        super().__init__(screen, pos, size, color, textColor, name, font)
+        self._overArea = False
+        self._pressed = False
         self.setCallback(event=MouseBtnPressed,  function=funcPressed)
         self.setCallback(event=MouseBtnReleased, function=funcReleased)
         self.setCallback(event=MouseEnterArea,   function=funcEnterArea)
@@ -44,14 +42,14 @@ class Button(Text):
     def action(self, mousePos, actionBtn, fade=0.6):
         if self._inArea(mousePos):
             if self._overArea == False:
-                #print('Entered')          
+                print('Entered')          
                 self._overArea = True
                 if self._fEnterArea:
                     self._fEnterArea()
 
             if self._pressed == True:
                 if actionBtn[0] == 0:
-                    #print('Released')
+                    print('Released')
                     self._pressed = False
                     if self._fReleased:
                         self._fReleased()
@@ -59,7 +57,7 @@ class Button(Text):
                     self.draw(0)
             else:
                 if actionBtn[0] == 1:
-                    #print('Press')
+                    print('Press')
                     self._pressed = True
                     if self._fPress:
                         self._fPress()
@@ -68,7 +66,7 @@ class Button(Text):
         else:
             if self._overArea == True:
                 self._overArea = False
-                #print('Exit')
+                print('Exit')
                 if self._fExitArea:
                     self._fExitArea()
             self.draw(fade=fade)
