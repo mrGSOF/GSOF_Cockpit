@@ -6,6 +6,9 @@ import pygame
 
 overlayColor = 0xFFFF00
 
+def getMouse():
+    return {"pos":pygame.mouse.get_pos(), "btn":pygame.mouse.get_pressed()}
+    
 def rotate(image, angle):
     """
     Rotate image by "angle" degrees around it's center

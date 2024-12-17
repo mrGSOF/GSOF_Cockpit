@@ -12,11 +12,13 @@ from GSOF_Cockpit.Automotive import SteeringWheel as SW
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
+from GSOF_Cockpit.Aerospace import GMeter_Analog as G
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Button import Button
 from GSOF_Cockpit.Text import Text
+from GSOF_Cockpit.GraphicsLib import getMouse
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -95,18 +97,17 @@ class DemoCockpit():
 
       self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
                                inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
-                               inputMax = 3*4.2)             #< Maximum voltageof 3S-Lipo pack
-
+                               inputMax = 3*4.2              #< Maximum voltageof 3S-Lipo pack
+                              )
       self.Ibat = BAT.Battery( self.screen, pos=txBatt_pos, size=battLevel_size,
                                inputMin = 0,
-                               inputMax = 6)
-
+                               inputMax = 6
+                               )
       self.alt = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size,
                                bodyImage  = pygame.image.load('%s/skin/Alt_Meter200.png'%folder),
                                handAImage = pygame.image.load('%s/skin/Alt_Meter200_L_Needle.png'%folder),
                                handBImage = pygame.image.load('%s/skin/Alt_Meter200_S_Needle.png'%folder),
-                              )
-                                 
+                              )    
       self.vsi = SI.SingleIndicator( self.screen, pos=vsi_pos, size=vsi_size,
                                      bodyImage   = pygame.image.load('%s/resources/VerticalSpeedIndicator_Background.png'%folder),
                                      handImage   = pygame.image.load('%s/resources/VerticalSpeedNeedle.png'%folder),
@@ -138,19 +139,9 @@ class DemoCockpit():
 ##                                    moduluB_deg = 360
                                     )
 
-      self.g = SI.SingleIndicator( self.screen, pos=g_pos, size=g_size,
-                             bodyImage   = pygame.image.load('%s/skin/G_Meter.png'%folder),
-                             handImage   = pygame.image.load('%s/skin/G_Meter_Ind.png'%folder),
-                             inputOffset = 9.8,
-                             kp          = 0.8,
-                             inputToDeg  = 4.6,
-                             offset_deg  = 90,#129,
-                             minMax_deg  = (-270,270),
-                             modulu_deg  = 270)
-
+      self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
       self.steeringWheel = SW.SteeringWheel( self.screen, pos=g_pos, size=g_size,
-                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel02.png'%folder).convert()
-                                             )
+                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel02.png'%folder).convert() )
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
@@ -176,7 +167,7 @@ class DemoCockpit():
          self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
          self.steeringWheel.update( data_stream['RX_G'] )
-         self.testBtn.action(mousePos=pygame.mouse.get_pos(), actionBtn=pygame.mouse.get_pressed() )
+         self.testBtn.action( mouse=getMouse() )
          
    def draw(self):
          """Draw all the dials. The update method should be called before to update all gauges"""
@@ -254,4 +245,4 @@ while True:
          Cockpit.draw()
          pygame.display.update()
          #print("%1.1f ms"%(1000*(time.time()-T0)))
-         clock.tick(30)
+         clock.tick(25)

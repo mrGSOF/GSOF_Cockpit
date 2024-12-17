@@ -1,0 +1,92 @@
+## Created on: 17/Dec 2024
+## Author    : Guy Soffer
+
+import os, pygame
+from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, getMouse
+from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.Button import Button
+from GSOF_Cockpit import Pygame_Colors as COLOR
+
+class GMeter_Analog(SingleIndicator):
+    """G-Meter gauge with minimum/maximum markers and reset button"""
+    def __init__(self, screen, pos=(0,0), size=(0,0),
+                bodyImage=None, handImage=None, minMaxHandImage=None):
+      """Initialise gauge"""
+      path = os.path.dirname(__file__)
+      if bodyImage == None:
+         bodyImage  = pygame.image.load(os.path.join(path, '../skin/G_Meter.png')).convert()
+      if handImage == None:
+         handImage  = pygame.image.load(os.path.join(path, '../skin/G_Meter_Ind.png')).convert()
+      super().__init__(screen, pos=pos, size=size,
+                       bodyImage   = bodyImage,
+                       handImage   = handImage,
+                       inputOffset = 9.8,
+                       kp          = 0.8,
+                       inputToDeg  = 4.6,
+                       offset_deg  = 90,
+                       minMax_deg  = (-270,270),
+                       modulu_deg  = 270)
+
+      if minMaxHandImage == None:
+         minMaxImage  = pygame.image.load(os.path.join(path, '../skin/Alt_Meter200_S_Needle.png')).convert()
+      self._minHand = Hand(
+                           initVal     = 0.0,
+                           offset      = 0.0,
+                           gain        = 1.0,
+                           kp          = 1.0,
+                           offset_deg  = 135,
+                           toDeg       = 4.6,
+                           minMax_deg  = (-270, 270),
+                           modulu_deg  = 270,
+                           skin        = minMaxImage
+                           )
+      self._maxHand = Hand(
+                           initVal     = 0.0,
+                           offset      = 0.0,
+                           gain        = 1.0,
+                           kp          = 1.0,
+                           offset_deg  = 135,
+                           toDeg       = 4.6,
+                           minMax_deg  = (-270, 270),
+                           modulu_deg  = 270,
+                           skin        = minMaxImage
+                           )
+      self.resetG()
+      self.rstBtn = Button( screen=screen,
+                            pos=(pos[0] +10, pos[1] +10), size=None,
+                            funcPressed=self.resetG,
+                            color=COLOR.RED, textColor=COLOR.WHITE,
+                            name="Reset" )
+
+    def update(self, val):
+        """Update the angle of the indicator's hand"""
+        if self.minG > val:
+            self.minG = val
+            self._minHand.update(self.minG)
+            self._minMaxChg = True
+        elif self.maxG < val:
+            self.maxG = val
+            self._maxHand.update(self.maxG)
+            self._minMaxChg = True
+        super().update(val)
+        
+    def resetG(self, Min=0.0, Max=0.0):
+        ###print("G Meter reset")
+        self.minG = Min
+        self.maxG = Max
+        self._minMaxChg = True
+        
+    def _drawMinMaxMarks(self, draw=True):
+        if self._minMaxChg == True:
+            self.__minHand = rotate(self._minHand.skin, int(self._minHand.angle_deg)) #< Rotate the minimum mark
+            self.__maxHand = rotate(self._maxHand.skin, int(self._maxHand.angle_deg)) #< Rotate the maximum mark
+            self._minMaxChg = False
+        self._overlay(self.__minHand, 0, 0)                                           #< Overlay hand on body 
+        self._overlay(self.__maxHand, 0, 0)                                           #< Overlay hand on body 
+        if draw == True:
+            drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos )
+
+    def draw(self, draw=True):
+        super().draw(draw=False)         #< Draw the gauge
+        self._drawMinMaxMarks(draw)      #< Draw the min/max markers
+        self.rstBtn.action( getMouse() ) #< Check for button action and draw the button

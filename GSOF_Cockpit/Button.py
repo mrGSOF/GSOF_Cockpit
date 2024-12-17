@@ -21,13 +21,15 @@ class Button(Text):
 
     def setCallback(self, event, function):
         if event == MouseBtnPressed:
-            self._fPress=function
+            self._fPress = function
         elif event == MouseBtnReleased:
-            self._fReleased=function
+            self._fReleased = function
         elif event == MouseEnterArea:
-            self._fEnterArea=function
+            self._fEnterArea = function
         elif event == MouseExitArea:
-            self._fExitArea=function
+            self._fExitArea = function
+        else:
+            print("Unrecognized MouseBtn event")
         return self
 
     def _inArea(self, pos) -> bool:
@@ -39,7 +41,9 @@ class Button(Text):
             return True
         return False
 
-    def action(self, mousePos, actionBtn, fade=0.6):
+    def action(self, mouse={}, fade=0.6):
+        mousePos=mouse["pos"]
+        actionBtn=mouse["btn"]
         if self._inArea(mousePos):
             if self._overArea == False:
                 print('Entered')          
@@ -54,7 +58,7 @@ class Button(Text):
                     if self._fReleased:
                         self._fReleased()
                 else:
-                    self.draw(0)
+                    self.draw(fade=0)
             else:
                 if actionBtn[0] == 1:
                     print('Press')
