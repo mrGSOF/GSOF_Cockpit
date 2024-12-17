@@ -53,10 +53,10 @@ class GMeter_Analog(SingleIndicator):
                            )
       self.resetG()
       self.rstBtn = Button( screen=screen,
-                            pos=(pos[0] +10, pos[1] +10), size=None,
+                            pos=(pos[0] +12, pos[1] +120), size=None,
                             funcPressed=self.resetG,
                             color=COLOR.RED, textColor=COLOR.WHITE,
-                            name="Reset" )
+                            name="R" )
 
     def update(self, val):
         """Update the angle of the indicator's hand"""
