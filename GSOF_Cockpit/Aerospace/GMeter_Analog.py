@@ -4,7 +4,7 @@
 import os, pygame
 from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, getMouse
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.Button import Button
+from GSOF_Cockpit.Button import Button_base, Button_Round
 from GSOF_Cockpit import Pygame_Colors as COLOR
 
 class GMeter_Analog(SingleIndicator):
@@ -52,21 +52,29 @@ class GMeter_Analog(SingleIndicator):
                            skin        = minMaxImage
                            )
       self.resetG()
-      self.rstBtn = Button( screen=screen,
-                            pos=(pos[0] +12, pos[1] +120), size=None,
+      self.rstBtn = Button_Round( screen=screen,
+                            pos=(pos[0] +10, pos[1] +118), size=(25,25),
                             funcPressed=self.resetG,
                             color=COLOR.RED, textColor=COLOR.WHITE,
                             name="R" )
 
+##      self.rstBtn = Button_base( screen=screen,
+##                            pos=(pos[0] +12, pos[1] +120), size=(30,30),
+##                            funcPressed=self.resetG)
+
     def update(self, val):
         """Update the angle of the indicator's hand"""
-        if self.minG > val:
-            self.minG = val
-            self._minHand.update(self.minG)
+        minG = self.minG
+        maxG = self.maxG
+        if minG > val:
+            minG = val
+            self._minHand.update(minG)
+            self.minG = minG
             self._minMaxChg = True
-        elif self.maxG < val:
-            self.maxG = val
-            self._maxHand.update(self.maxG)
+        elif maxG < val:
+            maxG = val
+            self._maxHand.update(maxG)
+            self.maxG = maxG
             self._minMaxChg = True
         super().update(val)
         
