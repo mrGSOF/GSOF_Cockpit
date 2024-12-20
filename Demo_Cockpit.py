@@ -45,6 +45,7 @@ class DemoCockpit():
       head_size = (int(150*scale), int(150*scale))
       g_size = (int(150*scale), int(150*scale))
       as_size = (int(150*scale), int(150*scale))
+      steeringWheel_size = (int(150*scale), int(150*scale))
       background_size = (int(600*scale), int(600*scale))
 
       ###Positioning the gauges
@@ -69,7 +70,8 @@ class DemoCockpit():
       head_pos = (vsi_pos[0] +vsi_size[0] +gap, vsi_pos[1])
       g_pos = (head_pos[0] +head_size[0] +gap, head_pos[1])
       as_pos = (alt_pos[0], alt_pos[1] +alt_size[1] +gap)
-
+      steeringWheel_pos =  (as_pos[0] +as_size[0] +gap, as_pos[1])
+      
       ###Initialise the gauges.
       self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
       self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
@@ -144,8 +146,8 @@ class DemoCockpit():
 
       self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
       self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
-      self.steeringWheel = SW.SteeringWheel( self.screen, pos=g_pos, size=g_size,
-                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel02.png'%folder).convert() )
+      self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
+                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel.png'%folder).convert() )
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
@@ -193,7 +195,7 @@ class DemoCockpit():
          self.head.draw()
          self.g.draw()
          self.airSpd.draw()
-#         self.steeringWheel.draw()
+         self.steeringWheel.draw()
 
 # Initialise screen.
 BG_color = COLOR.DARK
