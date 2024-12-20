@@ -58,7 +58,7 @@ class GMeter_Analog(SingleIndicator):
                             color=COLOR.RED, textColor=COLOR.WHITE,
                             name="R" )
 
-##      self.rstBtn = Button_base( screen=screen,
+##      self.rstBtn = Button_Empty( screen=screen,
 ##                            pos=(pos[0] +12, pos[1] +120), size=(30,30),
 ##                            funcPressed=self.resetG)
 

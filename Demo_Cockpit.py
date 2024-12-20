@@ -16,7 +16,7 @@ from GSOF_Cockpit.Aerospace import GMeter_Analog as G
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
-from GSOF_Cockpit.Button import Button
+from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit.GraphicsLib import getMouse
 from GSOF_Cockpit import SingleIndicator as SI
@@ -90,10 +90,10 @@ class DemoCockpit():
                              color=colorBG, textColor=COLOR.WHITE,
                              name="<--[V] Batt [A]-->" )
 
-      self.testBtn = Button( screen=self.screen,
-                             pos=testBtn_pos, size=None,
-                             color=COLOR.RED, textColor=COLOR.WHITE,
-                             name="testButton" )
+      self.testBtn = Button_Rect( screen=self.screen,
+                                  pos=testBtn_pos, size=None,
+                                  color=COLOR.RED, textColor=COLOR.WHITE,
+                                  name="testButton" )
 
       self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
                                inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
