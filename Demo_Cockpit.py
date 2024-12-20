@@ -14,6 +14,7 @@ from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Aerospace import GMeter_Analog as G
 from GSOF_Cockpit.Aerospace import AirSpeedMeter_Analog as AS
+from GSOF_Cockpit.Aerospace import VsiMeter_Analog as VSI
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
@@ -113,15 +114,7 @@ class DemoCockpit():
                                handAImage = pygame.image.load('%s/skin/Alt_Meter200_L_Needle.png'%folder),
                                handBImage = pygame.image.load('%s/skin/Alt_Meter200_S_Needle.png'%folder),
                               )    
-      self.vsi = SI.SingleIndicator( self.screen, pos=vsi_pos, size=vsi_size,
-                                     bodyImage   = pygame.image.load('%s/resources/VerticalSpeedIndicator_Background.png'%folder),
-                                     handImage   = pygame.image.load('%s/resources/VerticalSpeedNeedle.png'%folder),
-                                     inputOffset = 0,
-                                     kp          = 0.8,
-                                     inputToDeg  = 25,
-                                     offset_deg  = 90,
-                                     minMax_deg  = (-90,270),
-                                     modulu_deg  = 360)
+      self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
 
       self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
                                     bodyImage   = pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
