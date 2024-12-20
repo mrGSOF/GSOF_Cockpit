@@ -13,6 +13,7 @@ from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Aerospace import GMeter_Analog as G
+from GSOF_Cockpit.Aerospace import AirSpeedMeter_Analog as AS
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
@@ -43,7 +44,8 @@ class DemoCockpit():
       vsi_size = (int(150*scale), int(150*scale))
       head_size = (int(150*scale), int(150*scale))
       g_size = (int(150*scale), int(150*scale))
-      background_size = (int(600*scale), int(450*scale))
+      as_size = (int(150*scale), int(150*scale))
+      background_size = (int(600*scale), int(600*scale))
 
       ###Positioning the gauges
       X0, Y0 = pos
@@ -66,6 +68,7 @@ class DemoCockpit():
       vsi_pos = (alt_pos[0] +alt_size[0] +gap, alt_pos[1])
       head_pos = (vsi_pos[0] +vsi_size[0] +gap, vsi_pos[1])
       g_pos = (head_pos[0] +head_size[0] +gap, head_pos[1])
+      as_pos = (alt_pos[0], alt_pos[1] +alt_size[1] +gap)
 
       ###Initialise the gauges.
       self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
@@ -140,6 +143,7 @@ class DemoCockpit():
                                     )
 
       self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
+      self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
       self.steeringWheel = SW.SteeringWheel( self.screen, pos=g_pos, size=g_size,
                                              wheelImage = pygame.image.load('%s/skin/SteeringWheel02.png'%folder).convert() )
 
@@ -166,6 +170,7 @@ class DemoCockpit():
          self.vsi.update( rf_data['RX_vsi'] )
          self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
          self.g.update( data_stream['RX_G'] )
+         self.airSpd.update( data_stream['RX_airSpd'] )
          self.steeringWheel.update( data_stream['RX_G'] )
          self.testBtn.action( mouse=getMouse() )
          
@@ -187,11 +192,12 @@ class DemoCockpit():
          self.vsi.draw()
          self.head.draw()
          self.g.draw()
+         self.airSpd.draw()
 #         self.steeringWheel.draw()
 
 # Initialise screen.
 BG_color = COLOR.DARK
-screen_size=(600,450)
+screen_size=(600,600)
 pygame.init()
 screen = pygame.display.set_mode(screen_size)
 screen.fill((0xff,0xff,0xff))
@@ -209,6 +215,7 @@ Ibat = 0
 test = 1
 alt = 0
 g = 9.8
+airSpd = 0.0
 vsi = 5
 clock = pygame.time.Clock()
 
@@ -225,7 +232,7 @@ while True:
       rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_sucsess':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
                  'RX_batt_cur':Ibat, 'TX_fr_sucsess':c, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                  'RX_head':60*math.sin(6.28*0.01*t), 'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
-                 'RX_vsi':vsi*math.sin(6.28*0.01*t)}
+                 'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd}
       
       if(rf_data):
          # We have data.
@@ -238,6 +245,9 @@ while True:
          Ibat += 0.1
          Ibat %= 6.5
          alt += 10
+         airSpd += 5.0
+         if airSpd > 800.0:
+            airSpd = 0.0
 
          # Update gauges
          T0 = time.time()
