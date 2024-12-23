@@ -2,8 +2,8 @@
 ## Author    : Guy Soffer
 
 import os, pkg_resources
-import pygame
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.GraphicsLib import imageLoad
    
 class PercentageFill(SingleIndicator):
    """Percentage dial with fill mark and maximum rabge of 180 degrees"""
@@ -17,9 +17,9 @@ class PercentageFill(SingleIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Background.png'))
+         bodyImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Background.png'))
       if handImage == None:
-         handImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Needle.png'))
+         handImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Needle.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,
@@ -43,9 +43,9 @@ class Percentage(SingleIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/Indicator_Background.png'))
+         bodyImage = imageLoad(os.path.join(path, '../resources/Indicator_Background.png'))
       if handImage == None:
-         handImage = pygame.image.load(os.path.join(path, '../resources/AirSpeedNeedle.png'))
+         handImage = imageLoad(os.path.join(path, '../resources/AirSpeedNeedle.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,

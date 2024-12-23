@@ -2,10 +2,10 @@
 ## Author:     Guy Soffer
 
 import pkg_resources
-import pygame
-from GSOF_Cockpit import SingleIndicator as SI
+from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.GraphicsLib import imageLoad
 
-class SteeringWheel(SI.SingleIndicator):
+class SteeringWheel(SingleIndicator):
     def __init__(self, screen, pos, size,
                  bodyImage=None, wheelImage=None,
                  inputToDeg = 10.0,
@@ -15,9 +15,9 @@ class SteeringWheel(SI.SingleIndicator):
                  ):
         
         if bodyImage == None:
-            bodyImage  = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/Indicator_Background.png')).convert()
+            bodyImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/Indicator_Background.png'))
         if wheelImage == None:
-            wheelImage = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/SteeringWheel.png')).convert()
+            wheelImage = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/SteeringWheel.png'))
             
         super().__init__( screen=screen, pos=pos, size=size,
                           bodyImage  = bodyImage,

@@ -2,9 +2,8 @@
 ## Author    : Guy Soffer
 
 import os
-import pygame
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen
+from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, imageLoad
 
 class DualIndicator(SingleIndicator):
     """Dual-Indicator dial (Like Altmeter)"""
@@ -38,9 +37,9 @@ class DualIndicator(SingleIndicator):
                          skin        = handBImage
                          )
       if bodyImage == None:
-          bodyImage  = pygame.image.load(os.path.join(path, 'resources/Altimeter_Background.png'))
+          bodyImage  = imageLoad(os.path.join(path, 'resources/Altimeter_Background.png'))
       if handAImage == None:
-          handAImage = pygame.image.load(os.path.join(path, 'resources/LongNeedleAltimeter.png'))
+          handAImage = imageLoad(os.path.join(path, 'resources/LongNeedleAltimeter.png'))
       super().__init__(screen=screen, bodyImage=bodyImage, handImage=handAImage,
                        pos=pos, size=size,
                        initVal     = initVal,

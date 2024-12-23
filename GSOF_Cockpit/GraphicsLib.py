@@ -1,14 +1,53 @@
 ## Created on: 2 / Dec 2024
 ## Author    : Guy Soffer
 
-import math
+import math, time
 import pygame
 
 overlayColor = 0xFFFF00
 
+def init():
+    pygame.init()
+
+def update():
+    pygame.display.update()
+    
+def fillScreen(screen, rgbColor):
+    screen.fill(rgbColor)
+   
+def getScreen(screenSize):
+    return pygame.display.set_mode(screenSize)
+    
+def imageLoad(filename):
+    return pygame.image.load(filename).convert()
+
 def getMouse():
     return {"pos":pygame.mouse.get_pos(), "btn":pygame.mouse.get_pressed()}
+
+def scale(image, newSize):
+    return pygame.transform.scale(image, newSize)
+
+def blit(dest, image, pos):
+    dest.blit( image, pos )
+
+def drawEcllipse(screen, color, area):
+    pygame.draw.ellipse(screen, color, area)
+
+def drawRect(screen, color, area):
+    pygame.draw.rect(screen, color, area)
+
+def renderText(text, font, textColor):
+    return font.render(text, True, textColor)
+
+def getFont(name=None, size=20):
+    return pygame.font.Font(name, size)
+
+def getBitmapWidth(bmp):
+    return bmp.get_width()
     
+def getBitmapHeight(bmp):
+    return bmp.get_height()
+
 def rotate(image, angle):
     """
     Rotate image by "angle" degrees around it's center
@@ -58,6 +97,21 @@ def drawOnScreen(screen, obj, size, pos) -> None:
     obj.set_colorkey( overlayColor )
     screen.blit( pygame.transform.scale( obj, size), pos )
 
+class Clock():
+    def __init__(self):
+        self.T0 = time.time()
+
+    def tick(self, Fs=None, Ts=None):
+        if Ts == None:
+            Ts = 1.0/Fs
+        self.T0 += Ts
+        wait = self.T0 -time.time()
+        if wait > 0.01:
+            time.sleep(wait)
+        wait = self.T0 -time.time()
+        while (wait < 0.01) and (wait > 0.001):
+            wait = self.T0 -time.time()
+        
 class InputX():
     def __init__(self, initVal, offset, gain, kp, toAu, offset_au, minMax_au, modulu_au):
         self.val_Z1    = initVal

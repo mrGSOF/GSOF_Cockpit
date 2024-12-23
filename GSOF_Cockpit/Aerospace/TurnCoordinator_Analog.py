@@ -25,9 +25,8 @@
 """
 
 import pkg_resources
-import pygame
 from GSOF_Cockpit.DualIndicator import DualIndicator
-from GSOF_Cockpit.GraphicsLib import rotate, clip
+from GSOF_Cockpit.GraphicsLib import rotate, scale, clip, blit, imageLoad
 
 class TurnCoord(DualIndicator):
    """Turn Coordinator dial"""
@@ -45,13 +44,13 @@ class TurnCoord(DualIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
 
       if bodyImage == None:
-         bodyImage  = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinator_Background.png')).convert()
+         bodyImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinator_Background.png'))
       if turnImage == None:
-         turnImage  = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorAircraft.png')).convert()
+         turnImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorAircraft.png'))
       if slipImage == None:
-         slipImage  = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorBall.png')).convert()
+         slipImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorBall.png'))
       if iconImage == None:
-         iconImage = pygame.image.load(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorMarks.png')).convert()
+         iconImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinatorMarks.png'))
 
       super().__init__(screen=screen, bodyImage=bodyImage, handAImage=turnImage, handBImage=slipImage,
                        pos=pos, size=size,
@@ -90,4 +89,4 @@ class TurnCoord(DualIndicator):
       tmpImage = rotate(tmpImage, angleY)
       self._overlay(tmpImage, 0, -220)
       self._dial.set_colorkey(0xFFFF00)
-      self._screen.blit( pygame.transform.scale(self._dial, (self.w,self.h)), self.pos )
+      blit(dest=self._screen, image=scale(self._dial, (self.w,self.h)), pos=self.pos )

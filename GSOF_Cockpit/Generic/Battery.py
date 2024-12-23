@@ -2,8 +2,8 @@
 ## Author    : Guy Soffer
 
 import os, pkg_resources
-import pygame
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.GraphicsLib import imageLoad
    
 class Battery(SingleIndicator):
    """Battery dial"""
@@ -15,13 +15,13 @@ class Battery(SingleIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/Indicator_Background.png'))
+         bodyImage = imageLoad(os.path.join(path, '../resources/Indicator_Background.png'))
       if legendImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/ledgend.png'))
+         bodyImage = imageLoad(os.path.join(path, '../resources/ledgend.png'))
       if handImage == None:
-         handImage = pygame.image.load(os.path.join(path, '../resources/AirSpeedNeedle.png'))
+         handImage = imageLoad(os.path.join(path, '../resources/AirSpeedNeedle.png'))
       if iconImage == None:
-         iconImage = pygame.image.load(os.path.join(path, '../resources/battery2.png'))
+         iconImage = imageLoad(os.path.join(path, '../resources/battery2.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,

@@ -2,9 +2,8 @@
 ## Author    : Guy Soffer
 
 import math, os
-import pygame
 from GSOF_Cockpit.Gauge_base import Gauge
-from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen
+from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, imageLoad
 
 class SingleIndicator(Gauge):
     """Dial gauge with single hand (niddle)"""
@@ -21,9 +20,9 @@ class SingleIndicator(Gauge):
         """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
         path = os.path.dirname(__file__)
         if handImage == None:
-            handImage = pygame.image.load(os.path.join(path, 'resources/AirSpeedNeedle.png'))
+            handImage = imageLoad(os.path.join(path, 'resources/AirSpeedNeedle.png'))
         if bodyImage == None:
-            bodyImage = pygame.image.load(os.path.join(path, 'resources/Indicator_Background.png'))
+            bodyImage = imageLoad(os.path.join(path, 'resources/Indicator_Background.png'))
         super().__init__(screen, bodyImage, pos, size)
         self._handA = Hand(
                            initVal     = initVal,

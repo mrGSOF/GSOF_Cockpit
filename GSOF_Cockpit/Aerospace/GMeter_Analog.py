@@ -1,8 +1,8 @@
 ## Created on: 17/Dec 2024
 ## Author    : Guy Soffer
 
-import os, pygame
-from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, getMouse
+import os
+from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, getMouse, imageLoad
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
 from GSOF_Cockpit.Button import Button_base, Button_Round
 from GSOF_Cockpit import Pygame_Colors as COLOR
@@ -14,9 +14,9 @@ class GMeter_Analog(SingleIndicator):
       """Initialise gauge"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage  = pygame.image.load(os.path.join(path, '../skin/G_Meter.png')).convert()
+         bodyImage  = imageLoad(os.path.join(path, '../skin/G_Meter.png'))
       if handImage == None:
-         handImage  = pygame.image.load(os.path.join(path, '../skin/G_Meter_Ind.png')).convert()
+         handImage  = imageLoad(os.path.join(path, '../skin/G_Meter_Ind.png'))
       super().__init__(screen, pos=pos, size=size,
                        bodyImage   = bodyImage,
                        handImage   = handImage,
@@ -28,7 +28,7 @@ class GMeter_Analog(SingleIndicator):
                        modulu_deg  = 270)
 
       if minMaxHandImage == None:
-         minMaxImage  = pygame.image.load(os.path.join(path, '../skin/Alt_Meter200_S_Needle.png')).convert()
+         minMaxImage  = imageLoad(os.path.join(path, '../skin/Alt_Meter200_S_Needle.png'))
       self._minHand = Hand(
                            initVal     = 0.0,
                            offset      = 0.0,

@@ -2,9 +2,9 @@
 ## Author    : Guy Soffer
 
 import os, pkg_resources
-import pygame
 from GSOF_Cockpit.DualIndicator import DualIndicator
-   
+from GSOF_Cockpit.GraphicsLib import imageLoad
+  
 class SetPointVsFeedbackFill(DualIndicator):
    """Percentage dial with fill mark and maximum rabge of 180 degrees"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
@@ -17,11 +17,11 @@ class SetPointVsFeedbackFill(DualIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Background.png')).convert()
+         bodyImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Background.png'))
       if setPointImage == None:
-         setPointImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Needle.png')).convert()
+         setPointImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Needle.png'))
       if feedbackImage == None:
-         feedbackImage = pygame.image.load(os.path.join(path, '../resources/AirSpeedNeedle.png')).convert()
+         feedbackImage = imageLoad(os.path.join(path, '../resources/AirSpeedNeedle.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,
@@ -51,11 +51,11 @@ class SetPointVsFeedback(DualIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
       path = os.path.dirname(__file__)
       if bodyImage == None:
-         bodyImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Background.png')).convert()
+         bodyImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Background.png'))
       if setPointImage == None:
-         setPointImage = pygame.image.load(os.path.join(path, '../resources/EngineIndicator_Needle.png')).convert()
+         setPointImage = imageLoad(os.path.join(path, '../resources/EngineIndicator_Needle.png'))
       if feedbackImage == None:
-         feedbackImage = pygame.image.load(os.path.join(path, '../resources/AirSpeedNeedle.png')).convert()
+         feedbackImage = imageLoad(os.path.join(path, '../resources/AirSpeedNeedle.png'))
 
       super().__init__(screen, pos, size,
                        bodyImage   = bodyImage,

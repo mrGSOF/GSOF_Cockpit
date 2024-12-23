@@ -2,9 +2,8 @@
 ## Author    : Guy Soffer
 
 import os
-import pygame
 from GSOF_Cockpit.Gauge_base import Gauge
-from GSOF_Cockpit.GraphicsLib import InputXY, clip, rotate
+from GSOF_Cockpit.GraphicsLib import InputXY, clip, scale, rotate, blit, imageLoad
 
 class ArtificialHorizon(Gauge):
     """Artificial horizon dial"""
@@ -20,13 +19,13 @@ class ArtificialHorizon(Gauge):
        """Artificial horizon gauge. Default size of 300px can be overidden using w,h"""
        path = os.path.dirname(__file__)
        if bodyImage == None:
-            bodyImage = pygame.image.load(os.path.join(path, '../resources/Horizon_Background.png')).convert()
+            bodyImage = imageLoad(os.path.join(path, '../resources/Horizon_Background.png'))
 
        if ballImage == None:
-           ballImage = pygame.image.load(os.path.join(path, '../resources/Horizon_GroundSky.png')).convert()
+           ballImage = imageLoad(os.path.join(path, '../resources/Horizon_GroundSky.png'))
 
        if birdImage == None:
-           birdImage = pygame.image.load(os.path.join(path, '../resources/Maquette_Avion.png')).convert()
+           birdImage = imageLoad(os.path.join(path, '../resources/Maquette_Avion.png'))
 
        super().__init__(screen,
                         bodyImage = bodyImage,
@@ -61,4 +60,4 @@ class ArtificialHorizon(Gauge):
             self._overlay(self._icon ,self._iconX ,self._iconY)      #< Overlay the bird icon on gauge
         self._dial.set_colorkey(0xFFFF00)
         if draw == True:
-            self._screen.blit( pygame.transform.scale(self._dial,(self.w,self.h)), self.pos )
+            blit(self._screen, scale(self._dial,(self.w,self.h)), self.pos )

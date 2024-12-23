@@ -3,7 +3,7 @@
 
 import math
 import pygame
-from GSOF_Cockpit import GraphicsLib as Lib
+from GSOF_Cockpit.GraphicsLib import blit, drawOnScreen
 
 class Gauge():
    """Generic gauge with single input variable"""
@@ -33,21 +33,17 @@ class Gauge():
 
    def setIcon(self, iconImage, x, y):
       self._icon  = iconImage
-      self._iconX = x
-      self._iconY = y
+      self._iconX, self._iconY = x,y
       return self
    
    def setPosition(self, x, y) -> None:
        """Reposition top,left of dial at x,y"""
-       self.x = x 
-       self.y = y
-       self.pos[0] = x
-       self.pos[1] = y
+       self.x, self.y = x,y 
+       self.pos[0], self.pos[1] = x,y
 
    def positionCenter(self, x, y) -> None:
        """Reposition centre of dial at x,y"""
-       self.x = x
-       self.y = y
+       self.x, self.y = x,y
        self.pos[0] = x - self.pos[2]/2
        self.pos[1] = y - self.pos[3]/2
 
@@ -56,11 +52,11 @@ class Gauge():
        x -= (image.get_rect()[2] - self._dial.get_rect()[2])/2
        y -= (image.get_rect()[3] - self._dial.get_rect()[3])/2
        image.set_colorkey(0xFFFF00)
-       self._dial.blit(image, (x,y))
+       blit(self._dial, image, (x,y))
 
    def draw(self, draw=True):
       self._overlay(self._body, 0,0)                         #< Overlay body on dial
       if self._icon != None:
          self._overlay(self._icon ,self._iconX ,self._iconY) #< Overlay icon on dial at x,y
       if draw == True:
-         Lib.drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos)
+         drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos)
