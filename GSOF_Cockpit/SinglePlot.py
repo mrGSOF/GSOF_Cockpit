@@ -1,9 +1,9 @@
 ## Created on: 28 Mar 2017
 ## Author    : Guy Soffer
 
-import math, os, pygame
+import math, os
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.GraphicsLib import scale, drawLine, blit, imageLoad
+from GSOF_Cockpit.GraphicsLib import getSurface, setTransparentColor, scale, drawLine, blit, imageLoad
    
 class SinglePlot(SingleIndicator):
    """Generic Real-Time-Plot"""
@@ -14,7 +14,7 @@ class SinglePlot(SingleIndicator):
       self.inputA = 0
       self.scanPos = 0
       
-      self.image = pygame.Surface((0,0))
+      self.image = getSurface((0,0))
       if bool(coefList) == False:
          self.A_MinMax = (60,240)
          self.A_Offset = 150
@@ -69,5 +69,5 @@ class SinglePlot(SingleIndicator):
 
       self._overlay(self._body, 0,0)
 
-      self._dial.set_colorkey(0xFFFF00)
+      setTransparentColor(self._dial, 0xFFFF00)
       blit( self._screen, scale(self._dial,(self.w,self.h)), self.pos )

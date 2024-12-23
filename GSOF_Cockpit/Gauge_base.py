@@ -2,8 +2,7 @@
 ## Author    : Guy Soffer
 
 import math
-import pygame
-from GSOF_Cockpit.GraphicsLib import blit, drawOnScreen
+from GSOF_Cockpit.GraphicsLib import getSurface, fillSurface, blit, drawOnScreen
 
 class Gauge():
    """Generic gauge with single input variable"""
@@ -14,9 +13,9 @@ class Gauge():
       """
       self._screen = screen
       self._body   = bodyImage
-      self._dial   = pygame.Surface(self._body.get_rect()[2:4])
+      self._dial   = getSurface(self._body.get_rect()[2:4])
       self._icon   = None
-      self._dial.fill(0xFFFF00)
+      fillSurface(self._dial, 0xFFFF00)
 
       self.x, self.y = pos
       self.w, self.h = size

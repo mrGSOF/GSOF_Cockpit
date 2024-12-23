@@ -12,11 +12,20 @@ def init():
 def update():
     pygame.display.update()
     
+def getScreen(screenSize):
+    return pygame.display.set_mode(screenSize)
+    
 def fillScreen(screen, rgbColor):
     screen.fill(rgbColor)
    
-def getScreen(screenSize):
-    return pygame.display.set_mode(screenSize)
+def getSurface(surfaceSize):
+    return pygame.Surface(surfaceSize)
+    
+def fillSurface(surface, rgbColor):
+    surface.fill(rgbColor)
+
+def setTransparentColor(surface, rgbColor=0xFFFF00):
+    surface.set_colorkey(rgbColor)
     
 def imageLoad(filename):
     return pygame.image.load(filename).convert()
@@ -27,7 +36,7 @@ def getMouse():
 def scale(image, newSize):
     return pygame.transform.scale(image, newSize)
 
-def blit(dest, image, pos):
+def blit(dest, image, pos, special_flags=0):
     dest.blit( image, pos )
 
 def drawLine(surface, color, fromPnt, toPnt, width=1):
@@ -64,16 +73,16 @@ def rotate(image, angle):
     targetWidth  = tmpImage.get_rect()[2]
     targetHeight = tmpImage.get_rect()[3]
 
-    imageOut = pygame.Surface((targetWidth, targetHeight))
-    imageOut.fill( overlayColor )
-    imageOut.set_colorkey( overlayColor )
-    imageOut.blit(tmpImage,
+    imageOut = getSurface((targetWidth, targetHeight))
+    fillSurface(imageOut, overlayColor )
+    setTransparentColor(imageOut, overlayColor )
+    blit(imageOut, tmpImage,
                   (0,0),
                   pygame.Rect(imageCentreX -targetWidth/2,
-                              imageCentreY -targetHeight/2,
-                              targetWidth,
-                              targetHeight
-                              )
+                          imageCentreY -targetHeight/2,
+                          targetWidth,
+                          targetHeight
+                         )
                   )
     return imageOut
 

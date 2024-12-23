@@ -1,14 +1,12 @@
-## DualPlot.py
-## 
 ## Created on: 28 Mar 2017
 ## Author:     Guy Soffer
 
 
 import math, os
-import pygame
-from GSOF_Cockpit import SingleIndicator as SI
-   
-class DualPlot(SI.SingleIndicator):
+from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine
+
+class DualPlot(SingleIndicator):
    """
    Generic Real-Time Dual-Plots.
    """
@@ -23,7 +21,7 @@ class DualPlot(SI.SingleIndicator):
       self.inputB = 0
       self.scanPos = scanPos
 
-      self.image = pygame.Surface((0,0))
+      self.image = getSurface((0,0))
       if bool(coefList) == False:
          self.A_MinMax = (75,120)
          self.A_Offset = 75
@@ -51,9 +49,9 @@ class DualPlot(SI.SingleIndicator):
 
       if bool(imgList) == False:
          path = os.path.dirname(__file__)
-         imgList['Frame'] = pygame.image.load(os.path.join(path, 'resources/RF_Dial_Background.png'))
+         imgList['Frame'] = imageLoad(os.path.join(path, 'resources/RF_Dial_Background.png'))
       self.frameImage = imgList['Frame'].convert() #Frame of dial
-      super(SI.SingleIndicator, self).__init__(screen, self.image, self.frameImage, pos, size)
+      super(SingleIndicator).__init__(screen, self.image, self._bodyImage, pos, size)
        
    def update(self, inputA, inputB, scanPos):
        """
@@ -72,10 +70,10 @@ class DualPlot(SI.SingleIndicator):
        inputB = self.inputB
        scanPos = self.scanPos
        
-       top = self.dial.get_rect()[0] +60
-       left = self.dial.get_rect()[1] +30
-       bottom = self.dial.get_rect()[0] + self.dial.get_rect()[2] -60
-       right = self.dial.get_rect()[1] + self.dial.get_rect()[3] -30
+       top = self._dial.get_rect()[0] +60
+       left = self._dial.get_rect()[1] +30
+       bottom = self._dial.get_rect()[0] + self._dial.get_rect()[2] -60
+       right = self._dial.get_rect()[1] + self._dial.get_rect()[3] -30
        height = bottom - top
        middle = height/2 + top
 
@@ -86,15 +84,15 @@ class DualPlot(SI.SingleIndicator):
        inputA = height * inputA / 200
        inputB = height * inputB / 200
 
-       pygame.draw.line(self.dial, 0xFFFFFF, (scanPos,top), (scanPos,bottom), 1)
-       pygame.draw.line(self.dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 1)
+       drawLine(self._dial, 0xFFFFFF, (scanPos,top), (scanPos,bottom), 1)
+       drawLine(self._dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 1)
 
-       pygame.draw.line(self.dial, 0x00FFFF, (scanPos-1,middle-inputA), (scanPos-1,middle),4)
-       pygame.draw.line(self.dial, 0xFF00FF, (scanPos-1,bottom-inputB), (scanPos-1,bottom),4)
-       pygame.draw.line(self.dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle))
+       drawLine(self._dial, 0x00FFFF, (scanPos-1,middle-inputA), (scanPos-1,middle),4)
+       drawLine(self._dial, 0xFF00FF, (scanPos-1,bottom-inputB), (scanPos-1,bottom),4)
+       drawLine(self._dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle))
 
-       self.overlay(self.frameImage, 0,0)
+       self._overlay(self._body, 0,0)
 
-       self.dial.set_colorkey(0xFFFF00)
-       self.screen.blit( pygame.transform.scale(self.dial,(self.w,self.h)), self.pos )
+       setTtransparentColor(self._dial, 0xFFFF00)
+       blit( self._screen, scale(self._dial,(self.w,self.h)), self.pos )
  

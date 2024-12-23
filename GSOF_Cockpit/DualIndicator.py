@@ -24,7 +24,7 @@ class DualIndicator(SingleIndicator):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
       path = os.path.dirname(__file__)
       if handBImage == None:
-          handBImage = pygame.image.load(os.path.join(path, 'resources/SmallNeedleAltimeter.png'))
+          handBImage = imageLoad(os.path.join(path, 'resources/SmallNeedleAltimeter.png'))
       self._handB = Hand(
                          initVal     = initVal,
                          offset      = inputOffset,
