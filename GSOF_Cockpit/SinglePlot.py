@@ -1,16 +1,16 @@
 ## Created on: 28 Mar 2017
 ## Author    : Guy Soffer
 
-import math, os
-import pygame
-from GSOF_Cockpit import SingleIndicator as SI
+import math, os, pygame
+from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.GraphicsLib import scale, drawLine, blit, imageLoad
    
-class SinglePlot(SI.SingleIndicator):
+class SinglePlot(SingleIndicator):
    """Generic Real-Time-Plot"""
    def __init__(self, screen, pos=(0,0), size=(0,0), bodyImage=None, coefList={}):
       """Initialise dial at x,y. Default size of 300px, can be overidden using w,h"""
-      x,y=pos
-      w,h=size
+      x,y = pos
+      w,h = size
       self.inputA = 0
       self.scanPos = 0
       
@@ -30,9 +30,8 @@ class SinglePlot(SI.SingleIndicator):
 
       if bodyImage == None:
          path = os.path.dirname(__file__)
-         bodyImage = pygame.image.load(os.path.join(path, 'resources/RF_Dial_Background.png'))
-      bodyImage = bodyImage.convert() #Frame of dial
-      super(SI.SingleIndicator, self).__init__(screen, bodyImage, pos, size)
+         bodyImage = imageLoad(os.path.join(path, 'resources/RF_Dial_Background.png'))
+      super().__init__(screen, pos, size, bodyImage)
        
    def update(self, inputA, scanPos):
        """Update and gauge values"""
@@ -62,13 +61,13 @@ class SinglePlot(SI.SingleIndicator):
       inputA = height * inputA / 200
       
       #The tracing line (Current position)
-      pygame.draw.line(self._dial, 0xFFFFFF, (scanPos,top), (scanPos,bottom), 1)     #Erase line
-      pygame.draw.line(self._dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 1) #Mark line
+      drawLine(surface=self._dial, color=0xFFFFFF, fromPnt=(scanPos,top),   toPnt=(scanPos,bottom),   width=1) #< Erase line
+      drawLine(surface=self._dial, color=0x222222, fromPnt=(scanPos-1,top), toPnt=(scanPos-1,bottom), width=1) #< Mark line
 
-      pygame.draw.line(self._dial, 0x00FFFF, (scanPos-1,inputA), (scanPos-1,middle),4)
-      pygame.draw.line(self._dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle))
+      drawLine(surface=self._dial, color=0x00FFFF, fromPnt=(scanPos-1,inputA), toPnt=(scanPos-1,middle),width=4)
+      drawLine(surface=self._dial, color=0xFFFF00, fromPnt=(scanPos-1,middle), toPnt=(scanPos-1,middle))
 
       self._overlay(self._body, 0,0)
 
       self._dial.set_colorkey(0xFFFF00)
-      self._screen.blit( pygame.transform.scale(self._dial,(self.w,self.h)), self.pos )
+      blit( self._screen, scale(self._dial,(self.w,self.h)), self.pos )

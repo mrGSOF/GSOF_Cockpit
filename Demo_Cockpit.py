@@ -20,7 +20,7 @@ from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
-from GSOF_Cockpit.GraphicsLib import getMouse
+from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update, Clock
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
@@ -110,17 +110,17 @@ class DemoCockpit():
                                inputMax = 6
                                )
       self.alt = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size,
-                               bodyImage  = pygame.image.load('%s/skin/Alt_Meter200.png'%folder),
-                               handAImage = pygame.image.load('%s/skin/Alt_Meter200_L_Needle.png'%folder),
-                               handBImage = pygame.image.load('%s/skin/Alt_Meter200_S_Needle.png'%folder),
+                               bodyImage  = imageLoad('%s/skin/Alt_Meter200.png'%folder),
+                               handAImage = imageLoad('%s/skin/Alt_Meter200_L_Needle.png'%folder),
+                               handBImage = imageLoad('%s/skin/Alt_Meter200_S_Needle.png'%folder),
                               )    
       self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
 
       self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
-                                    bodyImage   = pygame.image.load('%s/resources/HeadingIndicator_Background.png'%folder),
-                                    handAImage  = pygame.image.load('%s/resources/HeadingWheel.png'%folder),
-                                    handBImage  = pygame.image.load('%s/resources/AirSpeedNeedle.png'%folder),
-##                                    iconImage   = pygame.image.load('%s/resources/HeadingIndicator_Aircraft.png'%folder),
+                                    bodyImage   = imageLoad('%s/resources/HeadingIndicator_Background.png'%folder),
+                                    handAImage  = imageLoad('%s/resources/HeadingWheel.png'%folder),
+                                    handBImage  = imageLoad('%s/resources/AirSpeedNeedle.png'%folder),
+##                                    iconImage   = imageLoad('%s/resources/HeadingIndicator_Aircraft.png'%folder),
 
 ##                                    ###Example for using default coefficiants
 ##                                    inputOffset = 0,
@@ -140,7 +140,7 @@ class DemoCockpit():
       self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
       self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
       self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
-                                             wheelImage = pygame.image.load('%s/skin/SteeringWheel.png'%folder).convert() )
+                                             wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder).convert() )
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
@@ -193,9 +193,9 @@ class DemoCockpit():
 # Initialise screen.
 BG_color = COLOR.DARK
 screen_size=(600,600)
-pygame.init()
-screen = pygame.display.set_mode(screen_size)
-screen.fill((0xff,0xff,0xff))
+init()
+screen = getScreen(screen_size)
+fillScreen( screen, COLOR.WHITE )
    
 # Initialise Dials.
 #path = pkg_resources.resource_filename('GSOF_Pygame_Cockpit', '')
@@ -212,7 +212,7 @@ alt = 0
 g = 9.8
 airSpd = 0.0
 vsi = 5
-clock = pygame.time.Clock()
+clock = Clock()
 
 while True:
    # Main program loop.
@@ -223,7 +223,7 @@ while True:
 
    if(test):
       # Use dummy test data
-      curPos = pygame.mouse.get_pos()
+      curPos = (getMouse())["pos"]
       rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_sucsess':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
                  'RX_batt_cur':Ibat, 'TX_fr_sucsess':c, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                  'RX_head':60*math.sin(6.28*0.01*t), 'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
@@ -248,6 +248,5 @@ while True:
          T0 = time.time()
          Cockpit.update(rf_data)
          Cockpit.draw()
-         pygame.display.update()
-         #print("%1.1f ms"%(1000*(time.time()-T0)))
-         clock.tick(25)
+         update()
+         clock.tick(Fs=25)

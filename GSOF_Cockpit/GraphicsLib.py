@@ -30,6 +30,9 @@ def scale(image, newSize):
 def blit(dest, image, pos):
     dest.blit( image, pos )
 
+def drawLine(surface, color, fromPnt, toPnt, width=1):
+    pygame.draw.line(surface, color, fromPnt, toPnt, width)
+
 def drawEcllipse(screen, color, area):
     pygame.draw.ellipse(screen, color, area)
 

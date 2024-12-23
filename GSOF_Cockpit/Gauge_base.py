@@ -13,7 +13,7 @@ class Gauge():
       size = Width and height of dial (w,h)
       """
       self._screen = screen
-      self._body   = bodyImage.convert()
+      self._body   = bodyImage
       self._dial   = pygame.Surface(self._body.get_rect()[2:4])
       self._icon   = None
       self._dial.fill(0xFFFF00)
