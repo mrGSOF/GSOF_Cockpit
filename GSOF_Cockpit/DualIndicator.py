@@ -3,7 +3,8 @@
 
 import os
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, imageLoad
+from GSOF_Cockpit.Input import Hand
+from GSOF_Cockpit.GraphicsLib import rotate, drawOnScreen, imageLoad
 
 class DualIndicator(SingleIndicator):
     """Dual-Indicator dial (Like Altmeter)"""

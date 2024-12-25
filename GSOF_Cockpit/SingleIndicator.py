@@ -3,7 +3,8 @@
 
 import math, os
 from GSOF_Cockpit.Gauge_base import Gauge
-from GSOF_Cockpit.GraphicsLib import rotate, Hand, drawOnScreen, imageLoad
+from GSOF_Cockpit.Input import Hand
+from GSOF_Cockpit.GraphicsLib import rotate, drawOnScreen, imageLoad
 
 class SingleIndicator(Gauge):
     """Dial gauge with single hand (niddle)"""

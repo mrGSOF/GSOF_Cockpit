@@ -20,13 +20,14 @@ from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
-from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update, Clock
+from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update
 from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
 from GSOF_Cockpit import DualPlot as DPn
 #from GSOF_Cockpit import Button_Widget as BTN
 from GSOF_Cockpit import Pygame_Colors as COLOR
+from GSOF_Cockpit.Clock_base import Clock
 
 class DemoCockpit():
    def __init__(self, screen, pos=(0,0), scale=1.0, colorBG=COLOR.BLACK, gap=0, folder='./'):
@@ -140,7 +141,7 @@ class DemoCockpit():
       self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
       self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
       self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
-                                             wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder).convert() )
+                                             wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder) )
 
 #      #self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
       self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )

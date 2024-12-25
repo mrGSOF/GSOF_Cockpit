@@ -3,7 +3,8 @@
 
 import os
 from GSOF_Cockpit.Gauge_base import Gauge
-from GSOF_Cockpit.GraphicsLib import InputXY, clip, scale, rotate, blit, imageLoad
+from GSOF_Cockpit.Input import InputXY
+from GSOF_Cockpit.GraphicsLib import clip, scale, rotate, blit, imageLoad
 
 class ArtificialHorizon(Gauge):
     """Artificial horizon dial"""
