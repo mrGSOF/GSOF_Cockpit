@@ -20,6 +20,7 @@ from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Generic import Map as MAP
+from GSOF_Cockpit.Wireframe3D import World3D as WORLD
 from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update
@@ -27,7 +28,6 @@ from GSOF_Cockpit import SingleIndicator as SI
 from GSOF_Cockpit import DualIndicator as DI
 from GSOF_Cockpit import SinglePlot as SP
 from GSOF_Cockpit import DualPlot as DPn
-#from GSOF_Cockpit import Button_Widget as BTN
 from GSOF_Cockpit import Pygame_Colors as COLOR
 from GSOF_Cockpit.Clock_base import Clock
 
@@ -50,6 +50,7 @@ class DemoCockpit():
         as_size = (int(150*scale), int(150*scale))
         steeringWheel_size = (int(150*scale), int(150*scale))
         map_size = (int(150*scale), int(150*scale))
+        world_size = (int(150*scale), int(150*scale))
         background_size = (int(600*scale), int(600*scale))
 
         ###Positioning the gauges
@@ -75,7 +76,8 @@ class DemoCockpit():
         g_pos = (head_pos[0] +head_size[0] +gap, head_pos[1])
         as_pos = (alt_pos[0], alt_pos[1] +alt_size[1] +gap)
         steeringWheel_pos =  (as_pos[0] +as_size[0] +gap, as_pos[1])
-        map_pos =  (steeringWheel_pos[0] +steeringWheel_pos[0] +gap, steeringWheel_pos[1])
+        map_pos =  (steeringWheel_pos[0] +steeringWheel_size[0] +gap, steeringWheel_pos[1])
+        world_pos =  (map_pos[0] +map_size[0] +gap, map_pos[1])
 
         ###Initialise the gauges.
         self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
@@ -125,6 +127,7 @@ class DemoCockpit():
         self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
                                                wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder) )
         self.map = MAP.Map( self.screen, pos=map_pos, size=map_size )
+        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size )
 
 ##        self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
         self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
@@ -152,6 +155,8 @@ class DemoCockpit():
         self.airSpd.update( data_stream['RX_airSpd'] )
         self.steeringWheel.update( data_stream['RX_G'] )
         self.map.update( x=data_stream['RX_posX'], y=data_stream['RX_posY'], deg=data_stream['RX_head'] )
+        self.world.update( x=data_stream['RX_worldX'], y=data_stream['RX_worldY'], z=data_stream['RX_worldZ'],
+                           yaw=data_stream['RX_worldYaw'], pitch=data_stream['RX_worldPitch'], roll=data_stream['RX_worldRoll'] )
         self.testBtn.action( mouse=getMouse() )
          
     def draw(self):
@@ -175,6 +180,7 @@ class DemoCockpit():
         self.airSpd.draw()
         self.steeringWheel.draw()
         self.map.draw()
+        self.world.draw()
 
 # Initialise screen.
 BG_color = COLOR.DARK
@@ -234,7 +240,9 @@ while True:
                    'RX_batt_cur':Ibat, 'TX_fr_sucsess':posX, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                    'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                    'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
-                   'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d}
+                   'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,
+                   'RX_worldX':0.0, 'RX_worldY':0.0, 'RX_worldZ':0.0,
+                   'RX_worldYaw':0.0, 'RX_worldPitch':0.0, 'RX_worldRoll':0.0}
 
         # Update gauges
         Cockpit.update(rf_data)
