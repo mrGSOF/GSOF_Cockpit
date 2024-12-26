@@ -12,7 +12,7 @@ class Map(Gauge):
                  bodyImage=None, mapImage=None, markImage=None,
                  inputXY_minMax=(-10,10),
                  mapXY_minMax = (-100, -100),
-                 inputToDeg = 1.0,
+                 inputToDeg = -1.0,
                  offset_deg = 0.0,
                  kp       = 0.8):
         path = os.path.dirname(__file__)
@@ -42,16 +42,17 @@ class Map(Gauge):
 
     def update(self, x, y, deg=0):
         """Update the angle of the indicator's hand"""
+        self.posX, self.posY = x,y
         self._mark.update(deg)
 
     def draw(self, draw=True):
         """Draw a indicator"""
         if self._icon != None:
-            self._overlay(self._icon ,self._iconX ,self._iconY) #< Overlay icon on dial at x,y
-        self._overlay(self._body, 0,0)                         #< Overlay body on dial
+            self._overlay(self._icon ,self._iconX ,self._iconY)   #< Overlay icon on dial at x,y
+        self._overlay(self._body, 0,0)                            #< Overlay body on dial
 
-        hand = rotate(self._mark.skin, int(self._mark.angle_deg)) #< Rotate the hand
-        self._overlay(hand, 0, 0)                                   #< Overlay hand on body 
+        mark = rotate(self._mark.skin, int(self._mark.angle_deg)) #< Rotate the hand
+        self._overlay(mark, self.posX, self.posY)                 #< Overlay hand on body 
         if draw == True:
             drawOnScreen(self._screen, self._dial, (self.w, self.h), self.pos )
   
