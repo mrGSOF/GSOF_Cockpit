@@ -15,6 +15,7 @@ from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
 from GSOF_Cockpit.Aerospace import GMeter_Analog as G
 from GSOF_Cockpit.Aerospace import AirSpeedMeter_Analog as AS
 from GSOF_Cockpit.Aerospace import VsiMeter_Analog as VSI
+from GSOF_Cockpit.Aerospace import Heading_Analog as HEAD
 from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
@@ -118,28 +119,7 @@ class DemoCockpit():
                                  handBImage = imageLoad('%s/skin/Alt_Meter200_S_Needle.png'%folder),
                                 )    
         self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
-
-        self.head = DI.DualIndicator( self.screen, pos=head_pos, size=head_size,
-                                      bodyImage   = imageLoad('%s/resources/HeadingIndicator_Background.png'%folder),
-                                      handAImage  = imageLoad('%s/resources/HeadingWheel.png'%folder),
-                                      handBImage  = imageLoad('%s/resources/AirSpeedNeedle.png'%folder),
-##                                      iconImage   = imageLoad('%s/resources/HeadingIndicator_Aircraft.png'%folder),
-
-##                                      ###Example for using default coefficiants
-##                                      inputOffset = 0,
-##                                      kp          = 0.8,
-
-                                      inputAtoDeg = -1,
-##                                      offsetA_deg = 0,
-##                                      minMaxA_deg = None,
-##                                      moduluA_deg = 360,
-
-                                      inputBtoDeg = -1,
-##                                      offsetB_deg = 0,
-##                                      minMaxB_deg = None,
-##                                      moduluB_deg = 360
-                                      )
-
+        self.head = HEAD.Heading( self.screen, pos=head_pos, size=head_size)
         self.g = G.GMeter_Analog( self.screen, pos=g_pos, size=g_size )
         self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
         self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
@@ -167,7 +147,8 @@ class DemoCockpit():
         self.rfSignal.update( data_stream['TX_fr_sucsess'],t )
         self.alt.update( rf_data['RX_alt'], rf_data['RX_alt'] )
         self.vsi.update( rf_data['RX_vsi'] )
-        self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head'] +random.randrange(-5,5) )
+        self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head']+random.randrange(-5,5) )
+        #self.head.update( 270, 270)
         self.g.update( data_stream['RX_G'] )
         self.airSpd.update( data_stream['RX_airSpd'] )
         self.steeringWheel.update( data_stream['RX_G'] )
@@ -248,10 +229,10 @@ while True:
         head_r = 6.24*0.5*t*0.01
         posY   = 40*math.sin(head_r)
         posX   = 40*math.cos(head_r)
-        head_d = -(head_r*180/3.14 +180)
+        head_d = head_r*180/3.14 +180
 
         rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_sucsess':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
-                   'RX_batt_cur':Ibat, 'TX_fr_sucsess':c, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
+                   'RX_batt_cur':Ibat, 'TX_fr_sucsess':posX, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                    'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                    'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
                    'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d}

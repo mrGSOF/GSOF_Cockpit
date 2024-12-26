@@ -12,7 +12,7 @@ class Map(Gauge):
                  bodyImage=None, mapImage=None, markImage=None,
                  inputXY_minMax=(-10,10),
                  mapXY_minMax = (-100, -100),
-                 inputToDeg = -1.0,
+                 inputToDeg = 1.0,
                  offset_deg = 0.0,
                  kp       = 0.8):
         path = os.path.dirname(__file__)
