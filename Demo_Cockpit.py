@@ -148,7 +148,6 @@ class DemoCockpit():
         self.alt.update( rf_data['RX_alt'], rf_data['RX_alt'] )
         self.vsi.update( rf_data['RX_vsi'] )
         self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head']+random.randrange(-5,5) )
-        #self.head.update( 270, 270)
         self.g.update( data_stream['RX_G'] )
         self.airSpd.update( data_stream['RX_airSpd'] )
         self.steeringWheel.update( data_stream['RX_G'] )
