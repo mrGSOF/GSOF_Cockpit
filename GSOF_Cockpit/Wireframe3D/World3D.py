@@ -22,23 +22,28 @@ class World(Gauge):
         super().__init__(screen, bodyImage, pos, size)
 
         if world == None:
-            net = OWF.Object_wireFrame(obj=Objects.net(25,20), color=(0,100,0)).translate(V=(-1000, 0, 500), initShape=True).scale(0.15, initShape=True)
-            plane = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/F16.stl"), color=(0,0,255)).rotate(-PI/2,0,0).scale(0.015, initShape=True)
+            net   = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True).scale(0.2, initShape=True)
+            axis  = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/axis.json"), color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
+            plane = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/F16.stl"),   color=( 0, 0,255)).translate(V=(0, 0, 0), initShape=True)
+            plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.015, initShape=True)
             world = OB.Object_container(objList = (
-                net,
+                #net,
+                axis,
                 plane,
                 ))
         self._world = world
+        self._wireframe = DISP.WireFrame(self._dial, drawLine, f=50, scale=10) #< f and scale affect the perspective calculation
         
     def update(self, x=0, y=0, z=0, yaw=0, pitch=0, roll=0): #< x:pitvh, y:roll, z:yaw
         """Update the position and attitude angle of 3D world"""
         self._world.reset()
+        self._world.rotate(x=pitch*PI/180, y=yaw*PI/180, z=roll*PI/180, initShape=False)
         self._world.translate(x=x, y=y, z=z, initShape=False)
-        self._world.rotate(x=pitch*PI/180, y=roll*PI/180, z=yaw*PI/180, initShape=False)
 
     def draw(self, draw=True):
         fillSurface(self._dial, 0xffffff) #WHITE)
-        self._drawWireFrame(color=None)
+        #self._drawWireFrame(color=None)
+        self._wireframe.draw(self._world)
         super().draw(True)
 
     def _drawWireFrame(self, color=None) -> None:

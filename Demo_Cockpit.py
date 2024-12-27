@@ -20,7 +20,14 @@ from GSOF_Cockpit.Generic import Battery as BAT
 from GSOF_Cockpit.Generic import Completion as COMP
 from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Generic import Map as MAP
-from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+
+try:
+   from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+   _3D_active = True
+except:
+   _3D_active = False
+   print("GSOF_Wireframe3D module isn't instlled")
+
 from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update
@@ -241,9 +248,8 @@ while True:
                    'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                    'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
                    'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,
-                   'RX_worldX':40, 'RX_worldY':75, 'RX_worldZ':0.0,
-                   'RX_worldYaw':head_d -180, 'RX_worldPitch':0.0, 'RX_worldRoll':0.0}
-                   #'RX_worldYaw':0.0, 'RX_worldPitch':0.0, 'RX_worldRoll':0.0}
+                   'RX_worldX':0, 'RX_worldY':0, 'RX_worldZ':-600.0,
+                   'RX_worldYaw':-head_d +180, 'RX_worldPitch':0.0, 'RX_worldRoll':45.0}
 
         # Update gauges
         Cockpit.update(rf_data)
