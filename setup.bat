@@ -1,2 +1,2 @@
-c:\python311\python setup.py install
+pip install .
 PAUSE
