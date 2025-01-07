@@ -1,9 +1,9 @@
 #!/usr/bin/python
 """
  * Demo_Cockpit.py
- * Created on: 10 Mar 2023
+ * Created on: 6 Jan 2025
  * Author:     Guy Soffer
- * Copyright (C) 2023 Guy Soffer
+ * Copyright (C) 2025 Guy Soffer
 """
 
 import sys, math, random, time
