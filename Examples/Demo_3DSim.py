@@ -17,6 +17,9 @@ from GSOF_Cockpit.Aerospace import Heading_Analog as HEAD
 
 try:
    from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+   from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
+   from GSOF_3dWireFrame.Lib3D import Object_base as OB
+   from GSOF_3dWireFrame.Lib3D import Objects
    _3D_active = True
 except:
    _3D_active = False
@@ -56,7 +59,13 @@ class DemoCockpit():
 
 ##        ###Initialise the gauges.
         self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
-        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size,
+        PI = math.pi
+        net   = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(-1000, -2000, -1000), initShape=True).scale(0.2, initShape=True)
+        axis  = OWF.Object_wireFrame(filename="%s/objects/axis.json"%folder, color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
+        plane = OWF.Object_wireFrame(filename="%s/objects/c172.stl"%folder,   color=( 0, 0,255)).rotate(x=-PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True)
+        plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.035, initShape=True)
+        world = OB.Object_container(objList=(net, axis, plane))
+        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world=world,
                                   bodyImage=imageLoad('%s/skin/Frame_Rect600x300.png'%folder))
 
         self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )

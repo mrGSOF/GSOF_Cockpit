@@ -6,7 +6,7 @@
  * Copyright (C) 2023 Guy Soffer
 """
 
-import sys, math, random, time
+import sys, math, random, time, os
 import pygame
 from GSOF_Cockpit.Automotive import SteeringWheel as SW
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
@@ -23,6 +23,9 @@ from GSOF_Cockpit.Generic import Map as MAP
 
 try:
    from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+   from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
+   from GSOF_3dWireFrame.Lib3D import Object_base as OB
+   from GSOF_3dWireFrame.Lib3D import Objects
    _3D_active = True
 except:
    _3D_active = False
@@ -132,7 +135,13 @@ class DemoCockpit():
         self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
                                                wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder) )
         self.map = MAP.Map( self.screen, pos=map_pos, size=map_size )
-        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size )
+
+        axis  = OWF.Object_wireFrame(filename="%s/objects/axis.json"%folder, color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
+        plane = OWF.Object_wireFrame(filename="%s/objects/F16.stl"%folder,   color=( 0, 0,255)).translate(V=(0, 0, 0), initShape=True)
+        plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.015, initShape=True)
+        world = OB.Object_container(objList=(axis, plane))
+
+        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world = world)
 
 ##        self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
         self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
