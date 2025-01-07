@@ -2,10 +2,13 @@
 ## Author    : Guy Soffer
 
 from GSOF_Cockpit.DualIndicator import DualIndicator
+from GSOF_Cockpit.Text import Text
+from GSOF_Cockpit import Pygame_Colors as COLOR
 
 class AltMeter(DualIndicator):
     """Dual indicator altitude gauge)"""
     def __init__(self, screen, pos=(0,0), size=(0,0),
+                digitsColor=COLOR.BLACK,
                 bodyImage=None, handAImage=None, handBImage=None):
       """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
       super().__init__(screen=screen, bodyImage=bodyImage, handAImage=handAImage, handBImage=handBImage,
@@ -25,3 +28,18 @@ class AltMeter(DualIndicator):
                        minMaxB_deg = None,        #< Indicator angle min/max (deg)
                        moduluB_deg = 360          #< Modulu for indicator angle (deg)
                       )
+      self.altitude = 0.0
+      self.digitalDisp = Text( screen=screen,
+                            pos=(pos[0] +23, pos[1] +66), size=(40,20),
+                            color=None, textColor=digitsColor,
+                            name="%d"%self.altitude )
+
+    def update(self, val):
+        """Update the angle of two hands"""
+        super().update(val, valB=None)
+        self.altitude = val
+
+    def draw(self, draw=True):
+        super().draw(draw=True)  #< Draw the gauge
+        self.digitalDisp.setText("%06d"%int(self.altitude))
+        self.digitalDisp.draw()  #< Check for button action and draw the button

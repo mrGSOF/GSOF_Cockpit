@@ -3,7 +3,7 @@ from GSOF_Cockpit.GraphicsLib import getFont, drawEcllipse, drawRect, renderText
 
 class Text():
     def __init__(self, screen, pos=(0,0), size=None,
-                 color=COLOR.GRAY, textColor=COLOR.BLACK,
+                 color=None, textColor=COLOR.BLACK,
                  name="Button", font=None):
 
         self._screen = screen
@@ -23,24 +23,25 @@ class Text():
             self.name = name
         if textColor != None:
             self.textColor = textColor
-        if color != None:
-            self.color = color
         if font != None:
             self.font = font
+        self.color = color
         self.textBitmap = renderText(self.name, self.font, self.textColor)
         return self
                 
     def draw(self, fade=1) -> None:
-        color = (self.color[0]*fade, self.color[1]*fade, self.color[2]*fade)
-        drawRect(self._screen, color, self.area)
+        if self.color != None:
+            color = (self.color[0]*fade, self.color[1]*fade, self.color[2]*fade)
+            drawRect(self._screen, color, self.area)
 
         textPosX = self.center[0] -self.textBitmap.get_width()/2
         textPosY = self.center[1] -self.textBitmap.get_height()/2
         blit(self._screen, self.textBitmap, (textPosX, textPosY))
 
     def drawEllipse(self, fade=1) -> None:
-        color = (self.color[0]*fade, self.color[1]*fade, self.color[2]*fade)
-        drawEcllipse(self._screen, color, self.area)
+        if self.color != None:
+            color = (self.color[0]*fade, self.color[1]*fade, self.color[2]*fade)
+            drawEcllipse(self._screen, color, self.area)
 
         textPosX = self.area[0] +int(self.area[2]/2) -self.textBitmap.get_width()/2
         textPosY = self.area[1] +int(self.area[3]/2) -self.textBitmap.get_height()/2

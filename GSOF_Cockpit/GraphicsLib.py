@@ -70,23 +70,23 @@ def rotate(image, angle):
     Used to rotate dial needles and probably doesn't need to be used externally
     """
     tmpImage = pygame.transform.rotate(image ,angle)
-    imageCentreX = tmpImage.get_rect()[0] +tmpImage.get_rect()[2]/2
-    imageCentreY = tmpImage.get_rect()[1] +tmpImage.get_rect()[3]/2
+    imageWidth  = tmpImage.get_rect()[2]
+    imageHeight = tmpImage.get_rect()[3]
+    imageCentreX = tmpImage.get_rect()[0] +int(imageWidth/2)
+    imageCentreY = tmpImage.get_rect()[1] +int(imageHeight/2)
 
-    targetWidth  = tmpImage.get_rect()[2]
-    targetHeight = tmpImage.get_rect()[3]
 
-    imageOut = getSurface((targetWidth, targetHeight))
+    imageOut = getSurface((imageWidth, imageHeight))
     fillSurface(imageOut, overlayColor )
     setTransparentColor(imageOut, overlayColor )
     blit(imageOut, tmpImage,
-                  (0,0),
-                  pygame.Rect(imageCentreX -targetWidth/2,
-                          imageCentreY -targetHeight/2,
-                          targetWidth,
-                          targetHeight
-                         )
-                  )
+         (0,0),
+         pygame.Rect(imageCentreX -int(imageWidth/2),
+                     imageCentreY -int(imageHeight/2),
+                     imageWidth,
+                     imageHeight
+                    )
+        )
     return imageOut
 
 def clip(image, x=0, y=0, w=0, h=0, oX=0, oY=0):

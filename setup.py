@@ -13,9 +13,8 @@
 from distutils.core import setup
 
 def readme():
-    with open('README.txt') as f:
+    with open('README.md') as f:
         return f.read()
-
 
 setup(
       name='GSOF-Pygame-Cockpit-Instruments',
@@ -36,7 +35,14 @@ setup(
       license='MIT',
       packages=['GSOF_Cockpit'],
       package_dir={'GSOF_Cockpit': 'GSOF_Cockpit'},
-      package_data={'GSOF_Cockpit': ['resources/*.*','skin/*.*']},
+      package_data={'GSOF_Cockpit': ['Aerospace/*.*',
+                                     'Automotive/*.*',
+                                     'Generic/*.*',
+                                     'Wireframe3D/*.*',
+                                     'resources/*.*',
+                                     'skin/*.*',
+                                     'objects/*.*'
+                                     ]},
 #     #include_package_data=True,
        install_requires=['markdown',],
 #      test_suite='nose.collector',

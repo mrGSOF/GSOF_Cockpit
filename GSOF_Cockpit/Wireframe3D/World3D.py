@@ -24,8 +24,9 @@ class World(Gauge):
         if world == None:
             net   = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True).scale(0.2, initShape=True)
             axis  = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/axis.json"), color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
-            plane = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/F16.stl"),   color=( 0, 0,255)).translate(V=(0, 0, 0), initShape=True)
-            plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.015, initShape=True)
+            #plane = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/F16.stl"),   color=( 0, 0,255)).translate(V=(0, 0, 0), initShape=True)
+            plane = OWF.Object_wireFrame(filename=os.path.join(path, "../objects/c172.stl"),   color=( 0, 0,255)).rotate(x=-PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True)
+            plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.035, initShape=True)
             world = OB.Object_container(objList = (
                 #net,
                 axis,
