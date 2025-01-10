@@ -11,6 +11,7 @@ import pygame
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
+from GSOF_Cockpit.Aerospace import MachMeter_Analog as MACH
 from GSOF_Cockpit.Aerospace import AirSpeedMeter_Analog as AS
 from GSOF_Cockpit.Aerospace import VsiMeter_Analog as VSI
 from GSOF_Cockpit.Aerospace import Heading_Analog as HEAD
@@ -44,20 +45,22 @@ class DemoCockpit():
         vsi_size = (int(150*scale), int(150*scale))
         head_size = (int(150*scale), int(150*scale))
         as_size = (int(150*scale), int(150*scale))
+        mach_size = (int(150*scale), int(150*scale))
         background_size = (int(600*scale), int(600*scale))
 
         ###Positioning the gauges
         X0, Y0 = pos
         world_pos   = (X0 +gap, Y0 +gap)
-        as_pos      = (world_pos[0] +75, world_pos[1] +world_size[1] +gap)
+        as_pos      = (world_pos[0] +0, world_pos[1] +world_size[1] +gap)
         horizon_pos = (as_pos[0] +as_size[0] +gap, as_pos[1])
         alt_pos     = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])
+        mach_pos    = (alt_pos[0] +alt_size[0] +gap, alt_pos[1])
 
         turn_pos = (as_pos[0], as_pos[1] +as_size[1] +gap)
         head_pos = (turn_pos[0] +turn_size[0] +gap, turn_pos[1])
         vsi_pos  = (head_pos[0] +head_size[0] +gap, head_pos[1])
 
-##        ###Initialise the gauges.
+        ###Initialise the gauges.
         self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
         PI = math.pi
         net   = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(-1000, -2000, -1000), initShape=True).scale(0.2, initShape=True)
@@ -68,9 +71,10 @@ class DemoCockpit():
         self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world=world,
                                   bodyImage=imageLoad('%s/skin/Frame_Rect600x300.png'%folder))
 
-        self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
+        self.airSpd  = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
         self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
-        self.alt = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size )    
+        self.alt     = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size )    
+        self.mach    = MACH.MachMeter( self.screen, pos=mach_pos, size=mach_size )
 
         self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
                                   turnRateToDeg      = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
@@ -94,8 +98,9 @@ class DemoCockpit():
         self.horizon.update( -rf_data['RX_est_x'], -data_stream['RX_est_y'] )
         self.turn.update( (rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
         self.alt.update( rf_data['RX_alt'] )
+        self.mach.update( rf_data['RX_mach'] )
         self.vsi.update( rf_data['RX_vsi'] )
-        self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head']+random.randrange(-5,5) )
+        self.head.update( data_stream['RX_head'], data_stream['RX_head']+random.randrange(-5,5) )
         self.airSpd.update( data_stream['RX_airSpd'] )
          
     def draw(self):
@@ -106,6 +111,7 @@ class DemoCockpit():
         self.horizon.draw()
         self.turn.draw()
         self.alt.draw()
+        self.mach.draw()
         self.vsi.draw()
         self.head.draw()
         self.airSpd.draw()
@@ -148,7 +154,7 @@ while True:
         c+=2
         alt += 10
         airSpd += 5.0
-        if airSpd > 800.0:
+        if airSpd > 1500.0:
             airSpd = 0.0
 
         head_r = 6.24*0.5*t*0.01
@@ -159,6 +165,7 @@ while True:
         rf_data = {'RX_alt':alt, 'RX_accel_x':50*math.sin(6.28*0.01*t),
                    'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                    'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
+                   'RX_mach':airSpd/1000.0,
                    'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,
                    'RX_worldX':0, 'RX_worldY':0, 'RX_worldZ':-600.0,
                    'RX_worldYaw':-head_d +180, 'RX_worldPitch':0.0, 'RX_worldRoll':45.0}

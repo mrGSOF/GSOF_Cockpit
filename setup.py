@@ -41,7 +41,8 @@ setup(
                                      'Wireframe3D/*.*',
                                      'resources/*.*',
                                      'skin/*.*',
-                                     'objects/*.*'
+                                     'objects/*.*',
+                                     'Examples/*.*',
                                      ]},
 #     #include_package_data=True,
        install_requires=['markdown',],
