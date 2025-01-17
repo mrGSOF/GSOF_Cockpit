@@ -22,7 +22,7 @@ class DualIndicator(SingleIndicator):
                 minMaxB_deg = None,
                 moduluA_deg = 360,
                 moduluB_deg = 360):
-      """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
+      """Initialise dial at x,y. Default size of 300px can be overridden using w,h."""
       path = os.path.dirname(__file__)
       if handBImage == None:
           handBImage = imageLoad(os.path.join(path, 'resources/SmallNeedleAltimeter.png'))

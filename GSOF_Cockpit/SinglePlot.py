@@ -1,19 +1,19 @@
 ## Created on: 28 Mar 2017
 ## Author    : Guy Soffer
 
-import math, os
+import os
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
 from GSOF_Cockpit.GraphicsLib import getSurface, setTransparentColor, scale, drawLine, blit, imageLoad
    
 class SinglePlot(SingleIndicator):
    """Generic Real-Time-Plot"""
    def __init__(self, screen, pos=(0,0), size=(0,0), bodyImage=None, coefList={}):
-      """Initialise dial at x,y. Default size of 300px, can be overidden using w,h"""
+      """Initialise dial at x,y. Default size of 300px, can be overridden using w,h"""
       x,y = pos
       w,h = size
       self.inputA = 0
       self.scanPos = 0
-      
+
       self.image = getSurface((0,0))
       if bool(coefList) == False:
          self.A_MinMax = (60,240)

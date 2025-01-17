@@ -1,13 +1,13 @@
 ## Created on: 28 Mar 2017
 ## Author    : Guy Soffer
 
-import math, os
+import os
 from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.Input import Hand
 from GSOF_Cockpit.GraphicsLib import rotate, drawOnScreen, imageLoad
 
 class SingleIndicator(Gauge):
-    """Dial gauge with single hand (niddle)"""
+    """Dial gauge with single hand (needle)"""
     def __init__(self, screen, pos=(0,0), size=(0,0),
                 bodyImage=None, handImage=None,
                 initVal     = 0.0,
@@ -18,7 +18,7 @@ class SingleIndicator(Gauge):
                 offset_deg  = +135,
                 minMax_deg  = (-135,135),
                 modulu_deg  = 360):
-        """Initialise dial at x,y. Default size of 300px can be overidden using w,h"""
+        """Initialise dial at x,y. Default size of 300px can be overridden using w,h"""
         path = os.path.dirname(__file__)
         if handImage == None:
             handImage = imageLoad(os.path.join(path, 'resources/AirSpeedNeedle.png'))

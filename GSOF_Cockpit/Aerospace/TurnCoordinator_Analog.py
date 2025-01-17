@@ -41,7 +41,7 @@ class TurnCoord(DualIndicator):
                 slipOffset_deg = 0.0,
                 slipMinMax_deg = (-14,14),
                 ):
-      """Initialise dial at x,y. Default size of 300px can be overidden using w,h."""
+      """Initialise dial at x,y. Default size of 300px can be overridden using w,h."""
 
       if bodyImage == None:
          bodyImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/TurnCoordinator_Background.png'))
@@ -54,18 +54,18 @@ class TurnCoord(DualIndicator):
 
       super().__init__(screen=screen, bodyImage=bodyImage, handAImage=turnImage, handBImage=slipImage,
                        pos=pos, size=size,
-                       inputGain   = 1.0,                #< Input scaling is applied before offeset
-                       inputOffset = 0.0,                #< Input offeset is added to input value afterscale factor
-                       kp          = turnRateKp,         #< Filter coefficiant (0-no filter)
+                       inputGain   = 1.0,                #< Input scaling is applied before offset
+                       inputOffset = 0.0,                #< Input offset is added to input value afterscale factor
+                       kp          = turnRateKp,         #< Filter coefficient (0-no filter)
                        #kp          = slipKp
 
                        inputAtoDeg = turnRateToDeg,      #< Input value to degrees factor applied after offset
-                       offsetA_deg = turnRateOffset_deg, #< Input offeset is added to input value before scale factor
+                       offsetA_deg = turnRateOffset_deg, #< Input offset is added to input value before scale factor
                        minMaxA_deg = turnRateMinMax_deg, #< Indicator angle min/max (deg)
                        moduluA_deg = 360,                #< Modulu for indicator angle (deg)
 
                        inputBtoDeg = slipToDeg,          #< Input value to degrees factor applied after offset
-                       offsetB_deg = slipOffset_deg,     #< Input offeset is added to input value before scale factor
+                       offsetB_deg = slipOffset_deg,     #< Input offset is added to input value before scale factor
                        minMaxB_deg = slipMinMax_deg,     #< Indicator angle min/max (deg)
                        moduluB_deg = 360                 #< Modulu for indicator angle (deg)
                       )

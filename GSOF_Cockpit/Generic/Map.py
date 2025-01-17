@@ -4,7 +4,7 @@
 import os
 from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.Input import Hand #, InputXYZ
-from GSOF_Cockpit.GraphicsLib import imageLoad, rotate, scale, drawOnScreen
+from GSOF_Cockpit.GraphicsLib import imageLoad, rotate, drawOnScreen
   
 class Map(Gauge):
     """Locate and rotate a marker on background image (map)"""

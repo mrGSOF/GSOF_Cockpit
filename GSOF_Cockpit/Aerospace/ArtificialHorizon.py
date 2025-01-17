@@ -10,14 +10,14 @@ class ArtificialHorizon(Gauge):
     """Artificial horizon dial"""
     def __init__(self, screen, pos=(0,0), size=(0,0),
                  bodyImage=None, ballImage=None, birdImage=None,
-                 rollOffset = 0.0,    #< Input offeset is added to input value afterscale factor
-                 rollToDeg  = 1.0,    #< Input scaling is applied before offeset
-                 rollKp     = 0.5,    #< Filter coefficiant (0-no filter)
+                 rollOffset = 0.0,    #< Input offset is added to input value afterscale factor
+                 rollToDeg  = 1.0,    #< Input scaling is applied before offset
+                 rollKp     = 0.5,    #< Filter coefficient (0-no filter)
 
-                 pitchOffset = 0.0,    #< Input offeset is added to input value afterscale factor
-                 pitchToDeg  = 1.0,    #< Input scaling is applied before offeset
-                 pitchKp     = 0.5):   #< Filter coefficiant (0-no filter)
-       """Artificial horizon gauge. Default size of 300px can be overidden using w,h"""
+                 pitchOffset = 0.0,    #< Input offset is added to input value afterscale factor
+                 pitchToDeg  = 1.0,    #< Input scaling is applied before offset
+                 pitchKp     = 0.5):   #< Filter coefficient (0-no filter)
+       """Artificial horizon gauge. Default size of 300px can be overridden using w,h"""
        path = os.path.dirname(__file__)
        if bodyImage == None:
             bodyImage = imageLoad(os.path.join(path, '../resources/Horizon_Background.png'))

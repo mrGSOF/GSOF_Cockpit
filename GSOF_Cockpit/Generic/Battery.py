@@ -1,7 +1,7 @@
 ## Created on: 28 Mar 2017
 ## Author    : Guy Soffer
 
-import os, pkg_resources
+import os
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
 from GSOF_Cockpit.GraphicsLib import imageLoad
    

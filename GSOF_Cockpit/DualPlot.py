@@ -2,9 +2,9 @@
 ## Author:     Guy Soffer
 
 
-import math, os
+import os
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine
+from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine, imageLoad, setTransparentColor
 
 class DualPlot(SingleIndicator):
    """
@@ -13,13 +13,13 @@ class DualPlot(SingleIndicator):
    def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
       """
       Initialise dial at x,y.
-      Default size of 300px can be overidden using w,h.
+      Default size of 300px can be overridden using w,h.
       """
       x,y=pos
       w,h=size
       self.inputA = 0
       self.inputB = 0
-      self.scanPos = scanPos
+      self.scanPos = 0
 
       self.image = getSurface((0,0))
       if bool(coefList) == False:
@@ -93,6 +93,6 @@ class DualPlot(SingleIndicator):
 
        self._overlay(self._body, 0,0)
 
-       setTtransparentColor(self._dial, 0xFFFF00)
+       setTransparentColor(self._dial, 0xFFFF00)
        blit( self._screen, scale(self._dial,(self.w,self.h)), self.pos )
  

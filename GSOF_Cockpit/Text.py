@@ -1,5 +1,5 @@
 from GSOF_Cockpit import Pygame_Colors as COLOR
-from GSOF_Cockpit.GraphicsLib import getFont, drawEcllipse, drawRect, renderText, blit, getBitmapWidth, getBitmapHeight
+from GSOF_Cockpit.GraphicsLib import getFont, drawEllipse, drawRect, renderText, blit, getBitmapWidth, getBitmapHeight
 
 class Text():
     def __init__(self, screen, pos=(0,0), size=None,
@@ -41,7 +41,7 @@ class Text():
     def drawEllipse(self, fade=1) -> None:
         if self.color != None:
             color = (self.color[0]*fade, self.color[1]*fade, self.color[2]*fade)
-            drawEcllipse(self._screen, color, self.area)
+            drawEllipse(self._screen, color, self.area)
 
         textPosX = self.area[0] +int(self.area[2]/2) -self.textBitmap.get_width()/2
         textPosY = self.area[1] +int(self.area[3]/2) -self.textBitmap.get_height()/2

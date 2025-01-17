@@ -6,7 +6,7 @@
  * Copyright (C) 2025 Guy Soffer
 """
 
-import sys, math, random, time
+import sys, math, random
 import pygame
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
@@ -24,7 +24,7 @@ try:
    _3D_active = True
 except:
    _3D_active = False
-   print("GSOF_Wireframe3D module isn't instlled")
+   print("GSOF_Wireframe3D module isn't installed")
 
 ##from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text

@@ -76,12 +76,12 @@ class Button_base():
             self._pressed = False
 
 class Button_Empty(Button_base):
-    """Transparent button without lable"""
+    """Transparent button without label"""
     def draw(self, fade=1.0):
         return
 
 class Button_Rect(Text, Button_base):
-    """Rectangular button with lable"""
+    """Rectangular button with label"""
     def __init__(self, screen, pos=(0,0), size=None,
                  color=COLOR.GRAY, textColor=COLOR.BLACK,
                  name="Button", font=None,
@@ -94,7 +94,7 @@ class Button_Rect(Text, Button_base):
         Text.draw(self, fade)
 
 class Button_Round(Text, Button_base):
-    """Rectangular button with lable"""
+    """Rectangular button with label"""
     def __init__(self, screen, pos=(0,0), size=None,
                  color=COLOR.GRAY, textColor=COLOR.BLACK,
                  name="Button", font=None,

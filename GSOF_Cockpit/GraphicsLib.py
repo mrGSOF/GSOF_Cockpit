@@ -45,7 +45,7 @@ def blit(dest, image, pos, special_flags=0):
 def drawLine(surface, color, fromPnt, toPnt, width=1):
     pygame.draw.line(surface, color, fromPnt, toPnt, width)
 
-def drawEcllipse(screen, color, area):
+def drawEllipse(screen, color, area):
     pygame.draw.ellipse(screen, color, area)
 
 def drawRect(screen, color, area):

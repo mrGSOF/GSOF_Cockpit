@@ -31,7 +31,7 @@ class InputX():
         self.pos_au = math.fmod(pos, self.modulu_au)
 
 class InputXY():
-    """Manimulate the skin using two variables (X,Y)"""
+    """Manipulate the skin using two variables (X,Y)"""
     def __init__(self,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
@@ -68,7 +68,7 @@ class Hand(InputX):
         self.angle_deg = self.pos_au
 
 class MapRXY(InputXYZ):
-    """Manimulate the skin using three variables, R,X,Y"""
+    """Manipulate the skin using three variables, R,X,Y"""
     def __init__(self, skin,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,

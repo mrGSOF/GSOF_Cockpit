@@ -4,4 +4,5 @@
 /GSOF_Cockpit/Generic/__pycache__/*.*
 /build
 /dist
+/.history
 /*.spec

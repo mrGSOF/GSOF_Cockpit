@@ -6,7 +6,7 @@
  * Copyright (C) 2023 Guy Soffer
 """
 
-import sys, math, random, time, os
+import sys, math, random
 import pygame
 from GSOF_Cockpit.Automotive import SteeringWheel as SW
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
@@ -25,11 +25,10 @@ try:
    from GSOF_Cockpit.Wireframe3D import World3D as WORLD
    from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
    from GSOF_3dWireFrame.Lib3D import Object_base as OB
-   from GSOF_3dWireFrame.Lib3D import Objects
    _3D_active = True
 except:
    _3D_active = False
-   print("GSOF_Wireframe3D module isn't instlled")
+   print("GSOF_Wireframe3D module isn't installed")
 
 from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
@@ -66,7 +65,7 @@ class DemoCockpit():
         horizon_pos = (turn_pos[0] +turn_size[0] +gap, turn_pos[1])
         engine_pos = [0]*4
         eGap = 0
-        engine_pos[0] = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])          #Arangment
+        engine_pos[0] = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])          #Arrangement
         engine_pos[3] = ((engine_pos[0])[0] +engine_size[0]+ eGap, (engine_pos[0])[1])  #[0] [3]
         engine_pos[1] = ((engine_pos[0])[0], (engine_pos[0])[1] +engine_size[1] +eGap)  #   X
         engine_pos[2] = ((engine_pos[3])[0], (engine_pos[1])[1])                        #[1] [2]
@@ -92,10 +91,10 @@ class DemoCockpit():
 
         self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
                                   turnRateToDeg      = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  turnRateKp         = 0.2,      #< Filter coefficiant
+                                  turnRateKp         = 0.2,      #< Filter coefficient
                                   turnRateMinMax_deg = (-45,45), #< deg
                                   slipToDeg          = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  slipKp             = 0.3,      #< Filter coefficiant
+                                  slipKp             = 0.3,      #< Filter coefficient
                                   slipMinMax_deg     = (-14,14), #< deg
                                 )
         self.engine = [0]*4
@@ -116,7 +115,7 @@ class DemoCockpit():
 
         self.Vbat = BAT.Battery( self.screen, pos=rxBatt_pos, size=battLevel_size,
                                  inputMin = 3*3.0,             #< Lowest voltage of 3S-Lipo
-                                 inputMax = 3*4.2              #< Maximum voltageof 3S-Lipo pack
+                                 inputMax = 3*4.2              #< Maximum voltage of 3S-Lipo pack
                                 )
         self.Ibat = BAT.Battery( self.screen, pos=txBatt_pos, size=battLevel_size,
                                  inputMin = 0,
@@ -148,8 +147,8 @@ class DemoCockpit():
 
     def update(self, data_stream):
         """
-        Update all the dials. Usually done in a different rate then the actuale display refresh.
-        Also each dial can have a behaviour model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
+        Update all the dials. Usually done in a different rate then the actual display refresh.
+        Also each dial can have a behavior model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
         """
         # Update dials.
         self.horizon.update( -rf_data['RX_est_x'], -data_stream['RX_est_y'] )
@@ -160,8 +159,8 @@ class DemoCockpit():
         self.engine[3].update( data_stream['RX_eng'] )
         self.Vbat.update( data_stream['RX_batt_volt'] )
         self.Ibat.update( data_stream['RX_batt_cur'] )
-        #self.rfSignal.update( data_stream['RX_fr_sucsess'], data_stream['TX_fr_sucsess'], a )
-        self.rfSignal.update( data_stream['TX_fr_sucsess'],t )
+        #self.rfSignal.update( data_stream['RX_fr_success'], data_stream['TX_fr_success'], a )
+        self.rfSignal.update( data_stream['TX_fr_success'],t )
         self.alt.update( rf_data['RX_alt'] )
         self.vsi.update( rf_data['RX_vsi'] )
         self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head']+random.randrange(-5,5) )
@@ -250,8 +249,8 @@ while True:
         posX   = 40*math.cos(head_r)
         head_d = head_r*180/3.14 +180
 
-        rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_sucsess':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
-                   'RX_batt_cur':Ibat, 'TX_fr_sucsess':posX, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
+        rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_success':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
+                   'RX_batt_cur':Ibat, 'TX_fr_success':posX, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
                    'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
                    'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
                    'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,

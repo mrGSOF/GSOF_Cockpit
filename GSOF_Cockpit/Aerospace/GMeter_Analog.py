@@ -5,7 +5,7 @@ import os
 from GSOF_Cockpit.Input import Hand
 from GSOF_Cockpit.GraphicsLib import rotate, drawOnScreen, getMouse, imageLoad
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
-from GSOF_Cockpit.Button import Button_base, Button_Round
+from GSOF_Cockpit.Button import Button_Round
 from GSOF_Cockpit import Pygame_Colors as COLOR
 
 class GMeter_Analog(SingleIndicator):

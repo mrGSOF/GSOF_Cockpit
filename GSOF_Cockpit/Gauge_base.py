@@ -1,7 +1,6 @@
 ## Created on: 2 / Dec 2024
 ## Author    : Guy Soffer
 
-import math
 from GSOF_Cockpit.GraphicsLib import getSurface, fillSurface, blit, drawOnScreen
 
 class Gauge():
