@@ -32,14 +32,14 @@ class TurnCoord(DualIndicator):
    """Turn Coordinator dial"""
    def __init__(self, screen, pos=(0,0), size=(0,0),
                 bodyImage=None, turnImage=None, slipImage=None, iconImage=None,
-                turnRateKp=0.8,
-                turnRateToDeg = 1.0,
-                turnRateOffset_deg = 0.0,
-                turnRateMinMax_deg = (-45,45),
-                slipKp=0.8,
-                slipToDeg = 1.0,
-                slipOffset_deg = 0.0,
-                slipMinMax_deg = (-14,14),
+                turnRateKp=0.5,                #< Filter coefficiant
+                turnRateToDeg = 1.0,           #< Use 180.0/3.14 when input is in (Rad)
+                turnRateOffset_deg = 0.0,      #< Offset angle of turn indicator
+                turnRateMinMax_deg = (-45,45), #< deg
+                slipKp=0.5,                    #< Filter coefficiant
+                slipToDeg = 1.0,               #< Use 180.0/3.14 when input is in (Rad)
+                slipOffset_deg = 0.0,          #< Offset angle of slip needle
+                slipMinMax_deg = (-14,14)      #< Minimum and maximum angles of slip indicator
                 ):
       """Initialise dial at x,y. Default size of 300px can be overridden using w,h."""
 

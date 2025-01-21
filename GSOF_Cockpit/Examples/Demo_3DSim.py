@@ -8,6 +8,7 @@
 
 import sys, math, random
 import pygame
+from Data import Data
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
 from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
@@ -28,11 +29,12 @@ except:
 
 ##from GSOF_Cockpit.Button import Button_Rect
 from GSOF_Cockpit.Text import Text
-from GSOF_Cockpit.GraphicsLib import getMouse, imageLoad, getScreen, init, fillScreen, update
+from GSOF_Cockpit.GraphicsLib import imageLoad, getScreen, init, fillScreen, update
 from GSOF_Cockpit import Pygame_Colors as COLOR
 from GSOF_Cockpit.Clock_base import Clock
 
 class DemoCockpit():
+    """Constructs the gauges screen"""
     def __init__(self, screen, pos=(0,0), scale=1.0, colorBG=COLOR.BLACK, gap=0, folder='./'):
         self.screen = screen
         self.colorBG = colorBG
@@ -75,33 +77,25 @@ class DemoCockpit():
         self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
         self.alt     = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size )    
         self.mach    = MACH.MachMeter( self.screen, pos=mach_pos, size=mach_size )
-
-        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
-                                  turnRateToDeg      = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  turnRateKp         = 0.2,      #< Filter coefficiant
-                                  turnRateMinMax_deg = (-45,45), #< deg
-                                  slipToDeg          = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  slipKp             = 0.3,      #< Filter coefficiant
-                                  slipMinMax_deg     = (-14,14), #< deg
-                                )
+        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size)
         self.head = HEAD.Heading( self.screen, pos=head_pos, size=head_size)
         self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
 
-    def update(self, data_stream):
+    def update(self, newData):
         """
         Update all the dials. Usually done in a different rate then the actuale display refresh.
         Also each dial can have a behaviour model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
         """
         # Update dials.
-        self.world.update( x=data_stream['RX_worldX'], y=data_stream['RX_worldY'], z=data_stream['RX_worldZ'],
-                           yaw=data_stream['RX_worldYaw'], pitch=data_stream['RX_worldPitch'], roll=data_stream['RX_worldRoll'] )
-        self.horizon.update( -rf_data['RX_est_x'], -data_stream['RX_est_y'] )
-        self.turn.update( (rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
-        self.alt.update( rf_data['RX_alt'] )
-        self.mach.update( rf_data['RX_mach'] )
-        self.vsi.update( rf_data['RX_vsi'] )
-        self.head.update( data_stream['RX_head'], data_stream['RX_head']+random.randrange(-5,5) )
-        self.airSpd.update( data_stream['RX_airSpd'] )
+        self.world.update( x=newData['RX_worldX'], y=newData['RX_worldY'], z=newData['RX_worldZ'],
+                           yaw=newData['RX_worldYaw'], pitch=newData['RX_worldPitch'], roll=newData['RX_worldRoll'] )
+        self.horizon.update( -newData['RX_est_x'], -newData['RX_est_y'] )
+        self.turn.update( (newData['RX_est_x'])/2, (newData['RX_accel_x'])/4 )
+        self.alt.update( newData['RX_alt'] )
+        self.mach.update( newData['RX_mach'] )
+        self.vsi.update( newData['RX_vsi'] )
+        self.head.update( newData['RX_head'], newData['RX_head']+random.randrange(-5,5) )
+        self.airSpd.update( newData['RX_airSpd'] )
          
     def draw(self):
         """Draw all the dials. The update method should be called before to update all gauges"""
@@ -124,54 +118,14 @@ screen = getScreen(screen_size)
 fillScreen( screen, COLOR.WHITE )
    
 # Initialise Dials.
-#path = pkg_resources.resource_filename('GSOF_Pygame_Cockpit', '')
 path = '../'
 Cockpit = DemoCockpit(screen, colorBG=BG_color, scale=1.0, folder=path)
-
-t=0
-b=0
-c=-100
-test = 1
-alt = 0
-airSpd = 0.0
-vsi = 5
+Telemetry = Data(screen_size)
 clock = Clock()
 
 while True:
-    # Main program loop.
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            print('Exiting....')
-            sys.exit()   # end program.
-
-    if(test):
-        # Use dummy test data
-        curPos = (getMouse())["pos"]
-
-        # We have data.
-        t+=1
-        b+=1
-        c+=2
-        alt += 10
-        airSpd += 5.0
-        if airSpd > 1500.0:
-            airSpd = 0.0
-
-        head_r = 6.24*0.5*t*0.01
-        posY   = 40*math.sin(head_r)
-        posX   = 40*math.cos(head_r)
-        head_d = head_r*180/3.14 +180
-
-        rf_data = {'RX_alt':alt, 'RX_accel_x':50*math.sin(6.28*0.01*t),
-                   'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
-                   'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
-                   'RX_mach':airSpd/1000.0,
-                   'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,
-                   'RX_worldX':0, 'RX_worldY':0, 'RX_worldZ':-600.0,
-                   'RX_worldYaw':-head_d +180, 'RX_worldPitch':0.0, 'RX_worldRoll':45.0}
-
-        # Update gauges
-        Cockpit.update(rf_data)
-        Cockpit.draw()
-        update()
-        clock.tick(Fs=25)
+    ###Loop to update gauges
+    Cockpit.update( Telemetry.getData() )
+    Cockpit.draw()
+    update()
+    clock.tick(Fs=25)

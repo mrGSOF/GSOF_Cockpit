@@ -8,6 +8,7 @@
 
 import sys, math, random
 import pygame
+from Data import Data
 from GSOF_Cockpit.Automotive import SteeringWheel as SW
 from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
 from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
@@ -89,14 +90,7 @@ class DemoCockpit():
         self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
         self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
 
-        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size,
-                                  turnRateToDeg      = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  turnRateKp         = 0.2,      #< Filter coefficient
-                                  turnRateMinMax_deg = (-45,45), #< deg
-                                  slipToDeg          = 1.0,      #< Use 180.0/3.14 when input is in (Rad)
-                                  slipKp             = 0.3,      #< Filter coefficient
-                                  slipMinMax_deg     = (-14,14), #< deg
-                                )
+        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size )
         self.engine = [0]*4
         self.engine[0] = COMP.Percentage(self.screen, pos=engine_pos[0], size=engine_size)
         self.engine[1] = SPFB.SetPointVsFeedbackFill(self.screen, pos=engine_pos[1], size=engine_size)
@@ -145,31 +139,30 @@ class DemoCockpit():
 ##        self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
         self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
 
-    def update(self, data_stream):
+    def update(self, newData):
         """
         Update all the dials. Usually done in a different rate then the actual display refresh.
         Also each dial can have a behavior model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
         """
         # Update dials.
-        self.horizon.update( -rf_data['RX_est_x'], -data_stream['RX_est_y'] )
-        self.turn.update( (rf_data['RX_est_x'])/2, (rf_data['RX_accel_x'])/4 )
-        self.engine[0].update( data_stream['RX_eng'] )
-        self.engine[1].update( val=data_stream['RX_eng']+random.randrange(-5,5), valB=data_stream['RX_eng'] )
-        self.engine[2].update( data_stream['RX_eng'] )
-        self.engine[3].update( data_stream['RX_eng'] )
-        self.Vbat.update( data_stream['RX_batt_volt'] )
-        self.Ibat.update( data_stream['RX_batt_cur'] )
-        #self.rfSignal.update( data_stream['RX_fr_success'], data_stream['TX_fr_success'], a )
-        self.rfSignal.update( data_stream['TX_fr_success'],t )
-        self.alt.update( rf_data['RX_alt'] )
-        self.vsi.update( rf_data['RX_vsi'] )
-        self.head.update( data_stream['RX_head']+random.randrange(-5,5), data_stream['RX_head']+random.randrange(-5,5) )
-        self.g.update( data_stream['RX_G'] )
-        self.airSpd.update( data_stream['RX_airSpd'] )
-        self.steeringWheel.update( data_stream['RX_G'] )
-        self.map.update( x=data_stream['RX_posX'], y=data_stream['RX_posY'], deg=data_stream['RX_head'] )
-        self.world.update( x=data_stream['RX_worldX'], y=data_stream['RX_worldY'], z=data_stream['RX_worldZ'],
-                           yaw=data_stream['RX_worldYaw'], pitch=data_stream['RX_worldPitch'], roll=data_stream['RX_worldRoll'] )
+        self.horizon.update( -newData['RX_est_x'], -newData['RX_est_y'] )
+        self.turn.update( (newData['RX_est_x'])/2, (newData['RX_accel_x'])/4 )
+        self.engine[0].update( newData['RX_eng'] )
+        self.engine[1].update( val=newData['RX_eng']+random.randrange(-5,5), valB=newData['RX_eng'] )
+        self.engine[2].update( newData['RX_eng'] )
+        self.engine[3].update( newData['RX_eng'] )
+        self.Vbat.update( newData['RX_batt_volt'] )
+        self.Ibat.update( newData['RX_batt_cur'] )
+        self.rfSignal.update( newData['TX_fr_success'], newData['RX_time'] )
+        self.alt.update( newData['RX_alt'] )
+        self.vsi.update( newData['RX_vsi'] )
+        self.head.update( newData['RX_head']+random.randrange(-5,5), newData['RX_head']+random.randrange(-5,5) )
+        self.g.update( newData['RX_G'] )
+        self.airSpd.update( newData['RX_airSpd'] )
+        self.steeringWheel.update( newData['RX_G'] )
+        self.map.update( x=newData['RX_posX'], y=newData['RX_posY'], deg=newData['RX_head'] )
+        self.world.update( x=newData['RX_worldX'], y=newData['RX_worldY'], z=newData['RX_worldZ'],
+                           yaw=newData['RX_worldYaw'], pitch=newData['RX_worldPitch'], roll=newData['RX_worldRoll'] )
         self.testBtn.action( mouse=getMouse() )
          
     def draw(self):
@@ -206,59 +199,12 @@ fillScreen( screen, COLOR.WHITE )
 #path = pkg_resources.resource_filename('GSOF_Pygame_Cockpit', '')
 path = '../'
 Cockpit = DemoCockpit(screen, colorBG=BG_color, scale=1.0, folder=path)
-
-t=0
-b=0
-c=-100
-Vbat = 9
-Ibat = 0
-test = 1
-alt = 0
-g = 9.8
-airSpd = 0.0
-vsi = 5
+Telemetry = Data(screen_size)
 clock = Clock()
 
 while True:
-    # Main program loop.
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            print('Exiting....')
-            sys.exit()   # end program.
-
-    if(test):
-        # Use dummy test data
-        curPos = (getMouse())["pos"]
-
-        # We have data.
-        t+=1
-        b+=1
-        c+=2
-        Vbat += 0.1
-        if Vbat >13:
-            Vbat = 9
-        Ibat += 0.1
-        Ibat %= 6.5
-        alt += 10
-        airSpd += 5.0
-        if airSpd > 800.0:
-            airSpd = 0.0
-
-        head_r = 6.24*0.5*t*0.01
-        posY   = 40*math.sin(head_r)
-        posX   = 40*math.cos(head_r)
-        head_d = head_r*180/3.14 +180
-
-        rf_data = {'RX_eng':50+50*math.sin(6.28*0.01*t), 'RX_fr_success':b, 'RX_alt':alt, 'RX_batt_volt':Vbat,
-                   'RX_batt_cur':Ibat, 'TX_fr_success':posX, 'RX_accel_x':50*math.sin(6.28*0.01*t), 'RX_G':g*(math.sin(6.28*0.01*t)),
-                   'RX_est_x':(screen_size[0]/2 -curPos[0]), 'RX_est_y':(screen_size[1]/2 -curPos[1]),
-                   'RX_vsi':vsi*math.sin(6.28*0.01*t), 'RX_airSpd':airSpd,
-                   'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,
-                   'RX_worldX':0, 'RX_worldY':0, 'RX_worldZ':-600.0,
-                   'RX_worldYaw':-head_d +180, 'RX_worldPitch':0.0, 'RX_worldRoll':45.0}
-
-        # Update gauges
-        Cockpit.update(rf_data)
-        Cockpit.draw()
-        update()
-        clock.tick(Fs=25)
+    ###Loop to update gauges
+    Cockpit.update( Telemetry.getData() )
+    Cockpit.draw()
+    update()
+    clock.tick(Fs=25)
