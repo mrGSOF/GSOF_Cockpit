@@ -20,6 +20,9 @@ class Data():
         self.alt = 0
         self.airSpd = 0.0
         self.vsi = 5
+        self.curPos = (0,0)
+        self.curPos_Z1 = self.curPos
+
 
     def getData(self) -> dict:
         """Generate and return new set of data"""
@@ -29,7 +32,8 @@ class Data():
                 sys.exit()   # end program.
 
         # Use dummy test data
-        curPos = (getMouse())["pos"]
+        self.curPos_Z1 = self.curPos
+        self.curPos = (getMouse())["pos"]
 
         # We have data.
         self.t += 1
@@ -53,11 +57,12 @@ class Data():
         head_d = head_r*180/3.14 +180
 
         return {'RX_time': t,
+                'RX_mouseDtX':self.curPos[0] -self.curPos_Z1[0], 'RX_mouseDtY':self.curPos[1] -self.curPos_Z1[1],
                 'RX_eng':50+50*math.sin(6.28*0.01*t),
                 'RX_batt_volt':self.Vbat, 'RX_batt_cur':self.Ibat,
                 'TX_fr_success':posX, 'RX_G':self.g*(math.sin(6.28*0.01*t)),
                 'RX_alt':self.alt, 'RX_accel_x':50*math.sin(6.28*0.01*t),
-                'RX_est_x':(self.screen_size[0]/2 -curPos[0]), 'RX_est_y':(self.screen_size[1]/2 -curPos[1]),
+                'RX_est_x':(self.screen_size[0]/2 -self.curPos[0]), 'RX_est_y':(self.screen_size[1]/2 -self.curPos[1]),
                 'RX_vsi':self.vsi*math.sin(6.28*0.01*t), 'RX_airSpd':self.airSpd,
                 'RX_mach':self.airSpd/1000.0,
                 'RX_posX':posX, 'RX_posY':posY, 'RX_head':head_d,

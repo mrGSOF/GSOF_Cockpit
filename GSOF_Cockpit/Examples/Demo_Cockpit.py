@@ -127,7 +127,8 @@ class DemoCockpit():
         self.airSpd = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
         self.steeringWheel = SW.SteeringWheel( self.screen, pos=steeringWheel_pos, size=steeringWheel_size,
                                                wheelImage = imageLoad('%s/skin/SteeringWheel.png'%folder) )
-        self.map = MAP.Map( self.screen, pos=map_pos, size=map_size )
+        self.map = MAP.Map( self.screen, pos=map_pos, size=map_size,
+                            mapImage=imageLoad('%s/skin/Grid_BackgroundWhite.png'%folder))
 
         axis  = OWF.Object_wireFrame(filename="%s/objects/axis.json"%folder, color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
         plane = OWF.Object_wireFrame(filename="%s/objects/F16.stl"%folder,   color=( 0, 0,255)).translate(V=(0, 0, 0), initShape=True)
