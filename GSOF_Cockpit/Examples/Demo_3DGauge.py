@@ -1,22 +1,13 @@
 #!/usr/bin/python
 """
- * Demo_Cockpit.py
- * Created on: 6 Jan 2025
+ * Demo_3DGauge.py
+ * Created on: 20 Jan 2025
  * Author:     Guy Soffer
  * Copyright (C) 2025 Guy Soffer
 """
 
-import sys, math, random
-import pygame
+import math
 from Data import Data
-from GSOF_Cockpit.Aerospace import ArtificialHorizon as AH
-from GSOF_Cockpit.Aerospace import TurnCoordinator_Analog as TC
-from GSOF_Cockpit.Aerospace import AltMeter_Analog as ALT
-from GSOF_Cockpit.Aerospace import MachMeter_Analog as MACH
-from GSOF_Cockpit.Aerospace import AirSpeedMeter_Analog as AS
-from GSOF_Cockpit.Aerospace import VsiMeter_Analog as VSI
-from GSOF_Cockpit.Aerospace import Heading_Analog as HEAD
-
 try:
    from GSOF_Cockpit.Wireframe3D import World3D as WORLD
    from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
@@ -40,27 +31,12 @@ class DemoCockpit():
         self.colorBG = colorBG
 
         ###Scaling the indicators
-        world_size = (int(600*scale), int(300*scale))
-        turn_size = (int(150*scale), int(150*scale))
-        horizon_size = (int(150*scale), int(150*scale))
-        alt_size = (int(150*scale), int(150*scale))
-        vsi_size = (int(150*scale), int(150*scale))
-        head_size = (int(150*scale), int(150*scale))
-        as_size = (int(150*scale), int(150*scale))
-        mach_size = (int(150*scale), int(150*scale))
+        world_size = (int(600*scale), int(600*scale))
         background_size = (int(600*scale), int(600*scale))
 
         ###Positioning the gauges
         X0, Y0 = pos
         world_pos   = (X0 +gap, Y0 +gap)
-        as_pos      = (world_pos[0] +0, world_pos[1] +world_size[1] +gap)
-        horizon_pos = (as_pos[0] +as_size[0] +gap, as_pos[1])
-        alt_pos     = (horizon_pos[0] +horizon_size[0] +gap, horizon_pos[1])
-        mach_pos    = (alt_pos[0] +alt_size[0] +gap, alt_pos[1])
-
-        turn_pos = (as_pos[0], as_pos[1] +as_size[1] +gap)
-        head_pos = (turn_pos[0] +turn_size[0] +gap, turn_pos[1])
-        vsi_pos  = (head_pos[0] +head_size[0] +gap, head_pos[1])
 
         ###Initialise the gauges.
         self.background = Text( screen=self.screen, pos=pos, size=background_size, color=colorBG, name='' )
@@ -71,15 +47,7 @@ class DemoCockpit():
         plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.035, initShape=True)
         world = OB.Object_container(objList=(net, axis, plane))
         self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world=world,
-                                  bodyImage=imageLoad('%s/skin/Frame_Rect600x300.png'%folder))
-
-        self.airSpd  = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
-        self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
-        self.alt     = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size )    
-        self.mach    = MACH.MachMeter( self.screen, pos=mach_pos, size=mach_size )
-        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size)
-        self.head = HEAD.Heading( self.screen, pos=head_pos, size=head_size)
-        self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
+                                  bodyImage=imageLoad('%s/skin/Frame_Rect600x600.png'%folder))
 
     def update(self, newData):
         """
@@ -88,26 +56,11 @@ class DemoCockpit():
         """
         self.world.update( x=newData['RX_worldX'], y=newData['RX_worldY'], z=newData['RX_worldZ'],
                            yaw=newData['RX_worldYaw'], pitch=newData['RX_worldPitch'], roll=newData['RX_worldRoll'] )
-        self.horizon.update( -newData['RX_est_x'], -newData['RX_est_y'] )
-        self.turn.update( (newData['RX_est_x'])/2, (newData['RX_accel_x'])/4 )
-        self.alt.update( newData['RX_alt'] )
-        self.mach.update( newData['RX_mach'] )
-        self.vsi.update( newData['RX_vsi'] )
-        self.head.update( newData['RX_head'], newData['RX_head']+random.randrange(-5,5) )
-        self.airSpd.update( newData['RX_airSpd'] )
          
     def draw(self):
         """Draw all the dials. The update method should be called before to update all gauges"""
         self.background.draw()
         self.world.draw()
-
-        self.horizon.draw()
-        self.turn.draw()
-        self.alt.draw()
-        self.mach.draw()
-        self.vsi.draw()
-        self.head.draw()
-        self.airSpd.draw()
 
 # Initialise screen.
 BG_color = COLOR.DARK

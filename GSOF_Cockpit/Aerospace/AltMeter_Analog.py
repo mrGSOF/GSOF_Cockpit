@@ -30,7 +30,7 @@ class AltMeter(DualIndicator):
                       )
       self.altitude = 0.0
       self.digitalDisp = Text( screen=screen,
-                            pos=(pos[0] +23, pos[1] +66), size=(40,20),
+                            pos=(pos[0] +int(size[0]*0.15), pos[1] +int(size[1]*0.44)), size=(int(0.27*size[0]), int(0.14*size[1])),
                             color=None, textColor=digitsColor,
                             name="%d"%self.altitude )
 

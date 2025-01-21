@@ -8,7 +8,10 @@ class Text():
 
         self._screen = screen
         if font == None:
-            font = getFont(None, 20)
+            fontSize = 20
+            if size != None:
+                fontSize = int(0.95*size[1])
+            font = getFont(None, fontSize)
         self.setText(name, textColor, color, font)
 
         if size == None:

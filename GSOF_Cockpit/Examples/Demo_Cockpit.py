@@ -144,7 +144,6 @@ class DemoCockpit():
         Update all the dials. Usually done in a different rate then the actual display refresh.
         Also each dial can have a behavior model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
         """
-        # Update dials.
         self.horizon.update( -newData['RX_est_x'], -newData['RX_est_y'] )
         self.turn.update( (newData['RX_est_x'])/2, (newData['RX_accel_x'])/4 )
         self.engine[0].update( newData['RX_eng'] )
