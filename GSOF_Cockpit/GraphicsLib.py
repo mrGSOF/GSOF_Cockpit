@@ -54,6 +54,9 @@ def drawRect(screen, color, area):
 def renderText(text, font, textColor):
     return font.render(text, True, textColor)
 
+def initFont() -> None:
+    pygame.font.init()
+
 def getFont(name=None, size=20):
     return pygame.font.Font(name, size)
 
