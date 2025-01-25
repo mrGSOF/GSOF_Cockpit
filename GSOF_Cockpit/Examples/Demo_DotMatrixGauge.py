@@ -16,14 +16,15 @@ from GSOF_Cockpit.Clock_base import Clock
 # Initialise screen.
 BG_color = COLOR.DARK
 screen_size=(768,384)
+pos = (0, 0)
 init()
 screen = getScreen(screen_size)
 fillScreen( screen, COLOR.WHITE )
    
 #Cockpit = DemoCockpit(screen, colorBG=BG_color, scale=6.0, folder=path)
-background = Text( screen=screen, pos=(0,0), size=screen_size, color=BG_color, name='' )
+background = Text( screen=screen, pos=pos, size=screen_size, color=BG_color, name='' )
 disp = DISP.DotMatrixDisplay( screen, bodyImage=None,
-                              pos=(0,0), size=screen_size,
+                              pos=pos, size=screen_size,
                               bgColor=COLOR.BLACK,
                               pxColor=COLOR.CYAN,
                               rows=8, cols=21

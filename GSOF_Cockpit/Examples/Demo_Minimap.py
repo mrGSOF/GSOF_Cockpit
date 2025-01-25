@@ -23,11 +23,12 @@ Telemetry = Data(size)
 clock = Clock()
 
 background = Text( screen=screen, pos=pos, size=size, color=COLOR.DARK, name='' )
+path = '../'
 minimap = MAP.Map( screen, pos=pos, size=size,
                     kp = 0.9,
-                    bodyImage   = imageLoad("../skin/Frame_Rect600x300.png"),
-                    mapImage    = imageLoad("../skin/Grid_BackgroundWhite600x300.png"),
-                    markerImage = imageLoad("../skin/car.png"),
+                    bodyImage   = imageLoad("%s/skin/Frame_Rect600x300.png"%path),
+                    mapImage    = imageLoad("%s/skin/Grid_BackgroundWhite600x300.png"%path),
+                    markerImage = imageLoad("%s/skin/car.png"%path),
                     )
 
 while True:

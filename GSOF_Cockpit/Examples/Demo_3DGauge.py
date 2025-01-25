@@ -26,6 +26,7 @@ from GSOF_Cockpit.Clock_base import Clock
 # Initialise screen.
 BG_color = COLOR.DARK
 screen_size=(600,600)
+pos = (0, 0)
 init()
 screen = getScreen(screen_size)
 fillScreen( screen, COLOR.WHITE )
@@ -34,7 +35,7 @@ fillScreen( screen, COLOR.WHITE )
 path = '../'
 PI = math.pi
 
-background = Text( screen=screen, pos=(0,0), size=screen_size, color=BG_color, name='' )
+background = Text( screen=screen, pos=pos, size=screen_size, color=BG_color, name='' )
 net   = OWF.Object_wireFrame(obj=Objects.net(25,25), color=(0,100,0)).rotate(x=PI/2, y=0, z=0).translate(V=(-1000, -2000, -1000), initShape=True).scale(0.2, initShape=True)
 axis  = OWF.Object_wireFrame(filename="%s/objects/axis.json"%path, color=(10,10,10 )).translate(V=(0, 0, 0), initShape=True).scale(1.5, initShape=True)
 plane = OWF.Object_wireFrame(filename="%s/objects/c172.stl"%path,   color=( 0, 0,255)).rotate(x=-PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True)
