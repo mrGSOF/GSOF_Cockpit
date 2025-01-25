@@ -39,15 +39,18 @@ class DemoCockpit():
         Update all the dials. Usually done in a different rate then the actual display refresh.
         Also each dial can have a behavior model (e.g: LPF, Min/Max detectors, Moving-Average, Delay...) 
         """
-        self.disp.printAt( x=0, y=0, s="+-------------------+", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=1, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=2, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=3, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=4, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=5, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=6, s="|                   |", clrLine=False, X2=False )
-        self.disp.printAt( x=0, y=7, s="+-------------------+", clrLine=False, X2=False )
-        self.disp.printAt( x=4, y=4, s=newData, clrLine=False, X2=False )
+        self.disp.printAt( col=0, row=0, s="+-------------------+", X2=False )
+        self.disp.printAt( col=0, row=1, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=2, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=3, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=4, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=5, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=6, s="|                   |", X2=False )
+        self.disp.printAt( col=0, row=7, s="+-------------------+", X2=False )
+        self.disp.printCenter(row=1, s=newData, clrLine=False )
+        self.disp.printRight( row=3, s=newData, clrLine=False )
+        self.disp.printLeft(  row=5, s=newData, clrLine=True )
+        self.disp.printAt( col=4, row=6, s=newData, X2=False )
         
          
     def draw(self):

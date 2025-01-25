@@ -10,6 +10,7 @@ def init():
     pygame.init()
 
 def update():
+    pygame.event.get() #< Use to prevent window freeze
     pygame.display.update()
     
 def getScreen(screenSize):
@@ -57,8 +58,11 @@ def renderText(text, font, textColor):
 def initFont() -> None:
     pygame.font.init()
 
-def getFont(name=None, size=20):
+def getFont(name, size=20):
     return pygame.font.Font(name, size)
+
+def getSysFont(name, size=20):
+    return pygame.freetype.SysFont(name, size)
 
 def getBitmapWidth(bmp):
     return bmp.get_width()
