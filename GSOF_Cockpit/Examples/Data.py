@@ -5,7 +5,8 @@
  * Copyright (C) 2025 Guy Soffer
 """
 
-import math, random
+import math
+import sys
 import pygame
 from GSOF_Cockpit.GraphicsLib import getMouse
 
@@ -55,9 +56,13 @@ class Data():
         posY   = 40*math.sin(head_r)
         posX   = 40*math.cos(head_r)
         head_d = head_r*180/3.14 +180
+        
+        dtx = self.curPos[0] -self.curPos_Z1[0]
+        dty = self.curPos[1] -self.curPos_Z1[1]
 
         return {'RX_time': t,
-                'RX_mouseDtX':self.curPos[0] -self.curPos_Z1[0], 'RX_mouseDtY':self.curPos[1] -self.curPos_Z1[1],
+                'RX_mouseDtX':dtx, 'RX_mouseDtY': dty,
+                'RX_heading': -180*math.atan2(-dty, dtx)/math.pi +90,
                 'RX_eng':50+50*math.sin(6.28*0.01*t),
                 'RX_batt_volt':self.Vbat, 'RX_batt_cur':self.Ibat,
                 'TX_fr_success':posX, 'RX_G':self.g*(math.sin(6.28*0.01*t)),
@@ -69,4 +74,3 @@ class Data():
                 'RX_worldX':0, 'RX_worldY':0, 'RX_worldZ':-600.0,
                 'RX_worldYaw':-head_d +180, 'RX_worldPitch':0.0, 'RX_worldRoll':45.0
                }
-
