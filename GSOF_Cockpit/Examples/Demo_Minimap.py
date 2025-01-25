@@ -23,8 +23,8 @@ Telemetry = Data(size)
 clock = Clock()
 
 background = Text( screen=screen, pos=pos, size=size, color=COLOR.DARK, name='' )
-map = MAP.Map( screen, pos=pos, size=size,
-                    kp = 0.7,
+minimap = MAP.Map( screen, pos=pos, size=size,
+                    kp = 0.9,
                     bodyImage   = imageLoad("../skin/Frame_Rect600x300.png"),
                     mapImage    = imageLoad("../skin/Grid_BackgroundWhite600x300.png"),
                     markerImage = imageLoad("../skin/car.png"),
@@ -33,12 +33,9 @@ map = MAP.Map( screen, pos=pos, size=size,
 while True:
     data = Telemetry.getData()
 
-    x,y     = -data["RX_est_x"], -data["RX_est_y"]
-    dtx,dty =  data["RX_mouseDtX"], -data["RX_mouseDtY"]
-    heading = data["RX_heading"]
-
-    map.update( x=x, y=y, deg=heading )
+    x,y,heading = data["RX_mouseX"], data["RX_mouseY"], data["RX_heading"]
+    minimap.update( x=x, y=y, deg=heading )
     background.draw()
-    map.draw()
+    minimap.draw()
     update()
     clock.tick(Fs=25)
