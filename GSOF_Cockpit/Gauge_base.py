@@ -12,7 +12,10 @@ class Gauge():
         """
         self._screen = screen
         self._body   = bodyImage
-        self._dial   = getSurface( size ) #self._body.get_rect()[2:4])
+        if self._body == None:
+            self._dial = getSurface( size )
+        else:
+            self._dial = getSurface( self._body.get_rect()[2:4] )
         self._icon   = None
         fillSurface(self._dial, 0xFFFF00)
 
