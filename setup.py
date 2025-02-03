@@ -24,7 +24,7 @@ setup(
       classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.7,3.9,3.10,3.11',
+        'Programming Language :: Python :: 3.7,3.9,3.10,3.11,3.12',
         'Topic :: Cockpit-Instruments :: GSOF',
       ],
       platforms = 'any',
