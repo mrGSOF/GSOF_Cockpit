@@ -5,10 +5,10 @@ import os, math
 from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.GraphicsLib import imageLoad, drawLine, fillSurface
 
-from Lib3D import Object_WireFrame as OWF
-from Lib3D import Object_base as OB
-from Lib3D import Objects
-from Lib3D import WireFrame_display as DISP
+from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
+from GSOF_3dWireFrame.Lib3D import Object_base as OB
+from GSOF_3dWireFrame.Lib3D import Objects
+from GSOF_3dWireFrame.Lib3D import WireFrame_display as DISP
 
 PI = math.pi
 
