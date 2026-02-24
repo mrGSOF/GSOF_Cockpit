@@ -23,7 +23,7 @@ from GSOF_Cockpit.Generic import SetPointVsFeedback as SPFB
 from GSOF_Cockpit.Generic import Map as MAP
 
 try:
-   from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+   from GSOF_Cockpit.Wireframe3D import Model3D as WORLD
    from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
    from GSOF_3dWireFrame.Lib3D import Object_base as OB
    _3D_active = True
@@ -135,7 +135,7 @@ class DemoCockpit():
         plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.015, initShape=True)
         world = OB.Object_container(objList=(axis, plane))
 
-        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world = world)
+        self.world = WORLD.Model3D( self.screen, pos=world_pos, size=world_size, world = world)
 
 ##        self.rfSignal = DP.DualPlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )
         self.rfSignal = SP.SinglePlot( self.screen, pos=rfSignal_pos,  size=rfSignal_size )

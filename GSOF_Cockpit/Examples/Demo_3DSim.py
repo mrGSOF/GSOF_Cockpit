@@ -18,7 +18,7 @@ from GSOF_Cockpit.Aerospace import VsiMeter_Analog as VSI
 from GSOF_Cockpit.Aerospace import Heading_Analog as HEAD
 
 try:
-   from GSOF_Cockpit.Wireframe3D import World3D as WORLD
+   from GSOF_Cockpit.Wireframe3D import Model3D as WORLD
    from GSOF_3dWireFrame.Lib3D import Object_WireFrame as OWF
    from GSOF_3dWireFrame.Lib3D import Object_base as OB
    from GSOF_3dWireFrame.Lib3D import Objects
@@ -70,16 +70,16 @@ class DemoCockpit():
         plane = OWF.Object_wireFrame(filename="%s/objects/c172.stl"%folder,   color=( 0, 0,255)).rotate(x=-PI/2, y=0, z=0).translate(V=(0, 0, 0), initShape=True)
         plane.setOrigin( origin=plane.getOrigin(origin="arithCenter"), initShape=True ).scale(0.035, initShape=True)
         world = OB.Object_container(objList=(net, axis, plane))
-        self.world = WORLD.World( self.screen, pos=world_pos, size=world_size, world=world,
-                                  bodyImage=imageLoad('%s/skin/Frame_Rect600x300.png'%folder))
+        self.world = WORLD.Model3D( self.screen, pos=world_pos, size=world_size, world=world,
+                                    bodyImage=imageLoad('%s/skin/Frame_Rect600x300.png'%folder))
 
         self.airSpd  = AS.AirSpeedMeter( self.screen, pos=as_pos, size=as_size )
         self.horizon = AH.ArtificialHorizon( self.screen, pos=horizon_pos, size=horizon_size)
         self.alt     = ALT.AltMeter( self.screen, pos=alt_pos, size=alt_size )    
         self.mach    = MACH.MachMeter( self.screen, pos=mach_pos, size=mach_size )
-        self.turn = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size)
-        self.head = HEAD.Heading( self.screen, pos=head_pos, size=head_size)
-        self.vsi = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
+        self.turn    = TC.TurnCoord( self.screen, pos=turn_pos, size=turn_size)
+        self.head    = HEAD.Heading( self.screen, pos=head_pos, size=head_size)
+        self.vsi     = VSI.VsiMeter( self.screen, pos=vsi_pos, size=vsi_size)
 
     def update(self, newData):
         """

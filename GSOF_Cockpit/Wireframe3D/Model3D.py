@@ -12,7 +12,7 @@ from GSOF_3dWireFrame.Lib3D import WireFrame_display as DISP
 
 PI = math.pi
 
-class World(Gauge):
+class Model3D(Gauge):
     def __init__(self, screen, pos=(0,0), size=(0,0),
                  bodyImage=None, world=None):
         path = os.path.dirname(__file__)
