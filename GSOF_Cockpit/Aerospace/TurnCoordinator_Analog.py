@@ -73,7 +73,7 @@ class TurnCoord(DualIndicator):
          self.setIcon(iconImage, x=0, y=80)
 
    def update(self, TurnRate, SideAcc):
-      super().update(val=TurnRate, valB=SideAcc)
+      super().update(val=6.667*TurnRate, valB=SideAcc) #< 3 deg per second should point the neddle to 20 deg
 
    def draw(self):
       """Draw the Turn Coordinator dial on the screen" surface"""
