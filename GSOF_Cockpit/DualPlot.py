@@ -12,6 +12,7 @@ class DualPlot(Gauge):
    """
    def __init__(self, screen, pos=(0,0), size=(75,120),
                 bodyImage=None,
+                topMargin=10, leftMargin=10, botMargin=10, rightMargin=10,
                 A_initVal    = 0.0,
                 A_MinMax     = (-1, 1),
                 A_Offset     = 0.0,
@@ -29,6 +30,7 @@ class DualPlot(Gauge):
       Initialise dial at x,y.
       Default size of 300px can be overridden using w,h.
       """
+      self.margins = (topMargin, leftMargin, botMargin, rightMargin)
       x,y=pos
       w,h=size
       self.scanPos = 0.0
@@ -60,15 +62,17 @@ class DualPlot(Gauge):
        """
        Draw the most updated representation of the dial     
        """
-       #Fatch the latest data from the model
-       top = self._dial.get_rect()[0] +60
-       left = self._dial.get_rect()[1] +30
-       bottom = self._dial.get_rect()[0] + self._dial.get_rect()[2] -60
-       right = self._dial.get_rect()[1] + self._dial.get_rect()[3] -30
-       height = bottom - top
-       middle = height/2 + top
+       #The drawing area in the gauge
+       top,left, h,w = self._dial.get_rect()
+       topMargin, leftMargin, botMargin, rightMargin = self.margins
+       top    = top +topMargin
+       left   = left +leftMargin
+       bottom = top +h -botMargin
+       right  = left +w -rightMargin
+       height = bottom -top
+       middle = height/2 +top
 
-       if self.scanPos > right +20:
+       if self.scanPos > right:
           self.scanPos = 0
        scanPos = self.scanPos
 
