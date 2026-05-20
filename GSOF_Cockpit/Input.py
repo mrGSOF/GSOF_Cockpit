@@ -1,7 +1,7 @@
 import math
 
 class InputX():
-    def __init__(self, initVal, offset, gain, kp, toAu, offset_au, minMax_au, modulu_au):
+    def __init__(self, initVal, offset, gain, kp, toAu, offset_au, minMax_au, modulu_au = None):
         self.val_Z1    = initVal
         self.offset    = offset
         self.gain      = gain
@@ -28,13 +28,16 @@ class InputX():
                 pos = Max
             elif pos < Min:
                 pos = Min
-        self.pos_au = math.fmod(pos, self.modulu_au)
+
+        if self.modulu_au != None:
+            pos = math.fmod(pos, self.modulu_au)
+        self.pos_au = pos
 
 class InputXY():
     """Manipulate the skin using two variables (X,Y)"""
     def __init__(self,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
-                 initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
+                 initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au
                  ):
         self.inX = InputX(initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au)
         self.inY = InputX(initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au)
@@ -48,7 +51,7 @@ class InputXYZ(InputXY):
     def __init__(self,
                  initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                  initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au,
-                 initValZ, offsetZ, gainZ, kpZ, toAuZ, offsetZ_au, minMaxZ_au, moduluZ_au,
+                 initValZ, offsetZ, gainZ, kpZ, toAuZ, offsetZ_au, minMaxZ_au, moduluZ_au
                  ):
         super().__init__(initValX, offsetX, gainX, kpX, toAuX, offsetX_au, minMaxX_au, moduluX_au,
                          initValY, offsetY, gainY, kpY, toAuY, offsetY_au, minMaxY_au, moduluY_au)

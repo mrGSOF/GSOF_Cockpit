@@ -1,75 +1,66 @@
 ## Created on: 28 Mar 2017
 ## Author:     Guy Soffer
 
-
 import os
-from GSOF_Cockpit.SingleIndicator import SingleIndicator
+from GSOF_Cockpit.Gauge_base import Gauge
+from GSOF_Cockpit.Input import InputX
 from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine, imageLoad, setTransparentColor
 
-class DualPlot(SingleIndicator):
+class DualPlot(Gauge):
    """
    Generic Real-Time Dual-Plots.
    """
-   def __init__(self, screen, pos=(0,0), size=(0,0), imgList={}, coefList={}):
+   def __init__(self, screen, pos=(0,0), size=(75,120),
+                bodyImage=None,
+                A_initVal    = 0.0,
+                A_MinMax     = (-1, 1),
+                A_Offset     = 0.0,
+                A_Gain       = 1.0,
+                A_PlotOffset = 0.0,
+                A_kp         = 1.0,
+                B_initVal    = 0.0,
+                B_MinMax     = (-1, 1),
+                B_Offset     = 0.0,
+                B_Gain       = 1.0,
+                B_PlotOffset = 0.0,
+                B_kp         = 1.0
+):
       """
       Initialise dial at x,y.
       Default size of 300px can be overridden using w,h.
       """
       x,y=pos
       w,h=size
-      self.inputA = 0
-      self.inputB = 0
-      self.scanPos = 0
+      self.scanPos = 0.0
+      A_phyToPlot = h / (A_MinMax[1] -A_MinMax[0])
+      A_plotZero =  A_phyToPlot*(A_MinMax[1] +A_MinMax[0])/2
+      
+      B_phyToPlot = h / (B_MinMax[1] -B_MinMax[0])
+      B_plotZero =  B_phyToPlot*(B_MinMax[1] +B_MinMax[0])/2
 
-      self.image = getSurface((0,0))
-      if bool(coefList) == False:
-         self.A_MinMax = (75,120)
-         self.A_Offset = 75
-         self.A_In_to_Out = 1
-         self.A_In_Offset = 0
-
-         self.B_MinMax = (30,75)
-         self.B_Offset = 30
-         self.B_In_to_Out = 1
-         self.B_In_Offset = 0
-
-         self.Scan_Region = (30,120)
-      else:
-         self.A_MinMax = coefList['A_MinMax']
-         self.A_Offset = coefList['A_Offset']
-         self.A_In_to_Out = coefList['A_InToOut']
-         self.A_In_Offset = coefList['A_InOffset']
-
-         self.B_MinMax = coefList['A_MinMax']
-         self.B_Offset = coefList['A_Offset']
-         self.B_In_to_Out = coefList['A_InToOut']
-         self.B_In_Offset = coefList['A_InOffset']
-
-         self.Scan_Region = coefList['Scan_Region']
-
-      if bool(imgList) == False:
+      self.plots = [InputX(initVal=A_initVal, offset=A_Offset, gain=A_Gain, kp=1.0, toAu=A_phyToPlot, offset_au=A_plotZero, minMax_au=(-h/2, h/2), modulu_au=None),
+                   InputX(initVal=B_initVal, offset=B_Offset, gain=B_Gain, kp=1.0, toAu=B_phyToPlot, offset_au=B_plotZero, minMax_au=(-h/2, h/2), modulu_au=None)
+                   ]
+      if bodyImage == None:
          path = os.path.dirname(__file__)
-         imgList['Frame'] = imageLoad(os.path.join(path, 'resources/RF_Dial_Background.png'))
-      self.frameImage = imgList['Frame'].convert() #Frame of dial
-      super(SingleIndicator).__init__(screen, self.image, self._bodyImage, pos, size)
+         bodyImage = imageLoad(os.path.join(path, 'skin/Frame_Rect.png'))
+      super().__init__(screen, bodyImage, pos, size)
        
-   def update(self, inputA, inputB, scanPos):
+   def update(self, *inputs, scanPos=None):
        """
-       Update and step the internal model machine       
+       Update and plots with new values     
        """
-       self.inputA = inputA
-       self.inputB = inputB
-       self.scanPos = scanPos
+       for plot, val in zip(self.plots, inputs):
+              plot.update(val)
+       self.scanPos += 0.1
+       if scanPos != None:
+          self.scanPos = scanPos
 
    def draw(self):
        """
        Draw the most updated representation of the dial     
        """
        #Fatch the latest data from the model
-       inputA = self.inputA
-       inputB = self.inputB
-       scanPos = self.scanPos
-       
        top = self._dial.get_rect()[0] +60
        left = self._dial.get_rect()[1] +30
        bottom = self._dial.get_rect()[0] + self._dial.get_rect()[2] -60
@@ -77,19 +68,22 @@ class DualPlot(SingleIndicator):
        height = bottom - top
        middle = height/2 + top
 
-       scanPos %= right -30
-       scanPos += 30
-       inputA %= 100
-       inputB %= 100
-       inputA = height * inputA / 200
-       inputB = height * inputB / 200
+       if self.scanPos > right +20:
+          self.scanPos = 0
+       scanPos = self.scanPos
 
-       drawLine(self._dial, 0xFFFFFF, (scanPos,top), (scanPos,bottom), 1)
-       drawLine(self._dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 1)
+       for plot in self.plots:
+          val = plot.pos_au
+       
 
-       drawLine(self._dial, 0x00FFFF, (scanPos-1,middle-inputA), (scanPos-1,middle),4)
-       drawLine(self._dial, 0xFF00FF, (scanPos-1,bottom-inputB), (scanPos-1,bottom),4)
-       drawLine(self._dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle))
+       drawLine(self._dial, 0xFFFFFF, (scanPos,top),   (scanPos,bottom), 4)   #< Draw cursor as vertical line
+       drawLine(self._dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 4)
+
+       drawLine(self._dial, 0x00FFFF, (scanPos-1,middle -val*0.98), (scanPos-1, middle -val*1.02), 4) #< Draw dotplot on first half
+       #drawLine(self._dial, 0x00FFFF, (scanPos-1,middle-val), (scanPos-1,middle), 4)  #< Draw line plot on first half
+       #drawLine(self._dial, 0xFF00FF, (scanPos-1,bottom-valB), (scanPos-1,bottom), 4) #< Draw on second half
+       
+       drawLine(self._dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle)) #< Draw center line
 
        self._overlay(self._body, 0,0)
 
