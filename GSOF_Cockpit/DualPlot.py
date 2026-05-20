@@ -4,7 +4,8 @@
 import os
 from GSOF_Cockpit.Gauge_base import Gauge
 from GSOF_Cockpit.Input import InputX
-from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine, imageLoad, setTransparentColor
+from GSOF_Cockpit.GraphicsLib import getSurface, scale, blit, drawLine, imageLoad, setTransparentColor, overlayColor
+from GSOF_Cockpit.Pygame_Colors import *
 
 class DualPlot(Gauge):
    """
@@ -13,6 +14,9 @@ class DualPlot(Gauge):
    def __init__(self, screen, pos=(0,0), size=(75,120),
                 bodyImage=None,
                 topMargin=10, leftMargin=10, botMargin=10, rightMargin=10,
+                #topMargin=50, leftMargin=50, botMargin=50, rightMargin=50,
+                style        = 'dot', # 'filled', 'line'
+                colors       = (RED, GREEN),
                 A_initVal    = 0.0,
                 A_MinMax     = (-1, 1),
                 A_Offset     = 0.0,
@@ -30,23 +34,41 @@ class DualPlot(Gauge):
       Initialise dial at x,y.
       Default size of 300px can be overridden using w,h.
       """
-      self.margins = (topMargin, leftMargin, botMargin, rightMargin)
-      x,y=pos
-      w,h=size
-      self.scanPos = 0.0
-      A_phyToPlot = h / (A_MinMax[1] -A_MinMax[0])
-      A_plotZero =  A_phyToPlot*(A_MinMax[1] +A_MinMax[0])/2
-      
-      B_phyToPlot = h / (B_MinMax[1] -B_MinMax[0])
-      B_plotZero =  B_phyToPlot*(B_MinMax[1] +B_MinMax[0])/2
-
-      self.plots = [InputX(initVal=A_initVal, offset=A_Offset, gain=A_Gain, kp=1.0, toAu=A_phyToPlot, offset_au=A_plotZero, minMax_au=(-h/2, h/2), modulu_au=None),
-                   InputX(initVal=B_initVal, offset=B_Offset, gain=B_Gain, kp=1.0, toAu=B_phyToPlot, offset_au=B_plotZero, minMax_au=(-h/2, h/2), modulu_au=None)
-                   ]
+      #self.margins = (topMargin, leftMargin, botMargin, rightMargin)
+      self.colors = colors
+      self.style = style
       if bodyImage == None:
          path = os.path.dirname(__file__)
          bodyImage = imageLoad(os.path.join(path, 'skin/Frame_Rect.png'))
-      super().__init__(screen, bodyImage, pos, size)
+      super().__init__(screen, scale(bodyImage, size), pos, size)
+
+      # Total size of ploting area
+      top,left, w,h = self._dial.get_rect()
+      self.top     = top +topMargin
+      self.left    = left +leftMargin
+      self.bottom  = top +h -botMargin
+      self.right   = left +w -rightMargin
+      self.height  = self.bottom -self.top
+
+      # Middle and height values for each plot
+      self.heightPlot  = self.height/2
+      self.middlePlot1 = (1/4)*self.height +self.top
+      self.middlePlot2 = (3/4)*self.height +self.top
+      self.middles = (self.middlePlot1, self.middlePlot2)
+      self.scanPos = self.left
+
+      print(top, left, top +h, left +w )
+      print(self.top, self.left, self.bottom, self.right )
+     
+      A_phyToPlot = self.height / (A_MinMax[1] -A_MinMax[0])
+      A_plotZero =  A_phyToPlot*(A_MinMax[1] +A_MinMax[0])/2
+      
+      B_phyToPlot = self.height / (B_MinMax[1] -B_MinMax[0])
+      B_plotZero =  B_phyToPlot*(B_MinMax[1] +B_MinMax[0])/2
+
+      self.plots = [InputX(initVal=A_initVal, offset=A_Offset, gain=A_Gain, kp=1.0, toAu=A_phyToPlot/2, offset_au=A_plotZero, minMax_au=(-h/2, h/2), modulu_au=None),
+                    InputX(initVal=B_initVal, offset=B_Offset, gain=B_Gain, kp=1.0, toAu=B_phyToPlot/2, offset_au=B_plotZero, minMax_au=(-h/2, h/2), modulu_au=None)
+                   ]
        
    def update(self, *inputs, scanPos=None):
        """
@@ -63,34 +85,23 @@ class DualPlot(Gauge):
        Draw the most updated representation of the dial     
        """
        #The drawing area in the gauge
-       top,left, h,w = self._dial.get_rect()
-       topMargin, leftMargin, botMargin, rightMargin = self.margins
-       top    = top +topMargin
-       left   = left +leftMargin
-       bottom = top +h -botMargin
-       right  = left +w -rightMargin
-       height = bottom -top
-       middle = height/2 +top
-
-       if self.scanPos > right:
-          self.scanPos = 0
+       if self.scanPos > self.right:
+          self.scanPos = self.left
        scanPos = self.scanPos
 
-       for plot in self.plots:
+       drawLine(self._dial, 0xFFFFFF, (scanPos, self.top),   (scanPos, self.bottom), 4) #< Draw the cursor as vertical line
+       drawLine(self._dial, 0x222222, (scanPos-1,self.top), (scanPos-1,self.bottom), 4) #< Clear the points of the previous plot   
+
+       for plot, middle, color in zip(self.plots, self.middles, self.colors):
           val = plot.pos_au
-       
-
-       drawLine(self._dial, 0xFFFFFF, (scanPos,top),   (scanPos,bottom), 4)   #< Draw cursor as vertical line
-       drawLine(self._dial, 0x222222, (scanPos-1,top), (scanPos-1,bottom), 4)
-
-       drawLine(self._dial, 0x00FFFF, (scanPos-1,middle -val*0.98), (scanPos-1, middle -val*1.02), 4) #< Draw dotplot on first half
-       #drawLine(self._dial, 0x00FFFF, (scanPos-1,middle-val), (scanPos-1,middle), 4)  #< Draw line plot on first half
-       #drawLine(self._dial, 0xFF00FF, (scanPos-1,bottom-valB), (scanPos-1,bottom), 4) #< Draw on second half
-       
-       drawLine(self._dial, 0xFFFF00, (scanPos-1,middle), (scanPos-1,middle)) #< Draw center line
+          if self.style == 'dot':
+             drawLine(self._dial, color, (scanPos-1, middle -val*0.98), (scanPos-1, middle -val), 4) #< Draw dot plot
+          else:
+             drawLine(self._dial, color, (scanPos-1, middle -val), (scanPos-1, middle), 4)  #< Draw line plot
+          
+          drawLine(self._dial, color, (self.left, middle), (self.right, middle)) #< Draw center line
 
        self._overlay(self._body, 0,0)
-
-       setTransparentColor(self._dial, 0xFFFF00)
-       blit( self._screen, scale(self._dial,(self.w,self.h)), self.pos )
+       setTransparentColor(self._dial, overlayColor)
+       blit( self._screen, self._dial, self.pos )
  
