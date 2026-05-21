@@ -86,6 +86,7 @@ class DualPlot(Gauge):
        """
        #The drawing area in the gauge
        if self.scanPos > self.right:
+          drawLine(self._dial, 0x222222, (self.scanPos-1,self.top), (self.scanPos-1,self.bottom), 4)
           self.scanPos = self.left
        scanPos = self.scanPos
 
@@ -99,7 +100,7 @@ class DualPlot(Gauge):
           else:
              drawLine(self._dial, color, (scanPos-1, middle -val), (scanPos-1, middle), 4)  #< Draw line plot
           
-          drawLine(self._dial, color, (self.left, middle), (self.right, middle)) #< Draw center line
+          drawLine(self._dial, GRAY, (self.left, middle), (self.right, middle)) #< Draw center line
 
        self._overlay(self._body, 0,0)
        setTransparentColor(self._dial, overlayColor)
