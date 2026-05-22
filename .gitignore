@@ -1,7 +1,4 @@
-/GSOF_Cockpit/__pycache__/*.*
-/GSOF_Cockpit/Aerospace/__pycache__/*.*
-/GSOF_Cockpit/Automotive/__pycache__/*.*
-/GSOF_Cockpit/Generic/__pycache__/*.*
+__pycache__/
 /build
 /dist
 /.history

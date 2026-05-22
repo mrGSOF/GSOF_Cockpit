@@ -5,24 +5,42 @@ import pkg_resources
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
 from GSOF_Cockpit.GraphicsLib import imageLoad
 
+
 class SteeringWheel(SingleIndicator):
-    def __init__(self, screen, pos, size,
-                 bodyImage=None, wheelImage=None,
-                 inputToDeg = 10.0,
-                 offset_deg = 9.8,
-                 kp         = 0.8,
-                 minMax_deg = (-270,270)
-                 ):
-        
+    def __init__(
+        self,
+        screen,
+        pos,
+        size,
+        bodyImage=None,
+        wheelImage=None,
+        inputToDeg=10.0,
+        offset_deg=9.8,
+        kp=0.8,
+        minMax_deg=(-270, 270),
+    ):
+
         if bodyImage == None:
-            bodyImage  = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/Indicator_Background.png'))
+            bodyImage = imageLoad(
+                pkg_resources.resource_filename(
+                    "GSOF_Cockpit", "resources/Indicator_Background.png"
+                )
+            )
         if wheelImage == None:
-            wheelImage = imageLoad(pkg_resources.resource_filename('GSOF_Cockpit', 'resources/SteeringWheel.png'))
-            
-        super().__init__( screen=screen, pos=pos, size=size,
-                          bodyImage  = bodyImage,
-                          handImage = wheelImage,
-                          inputToDeg = inputToDeg,
-                          offset_deg = offset_deg,
-                          kp         = kp,
-                          minMax_deg = minMax_deg)
+            wheelImage = imageLoad(
+                pkg_resources.resource_filename(
+                    "GSOF_Cockpit", "resources/SteeringWheel.png"
+                )
+            )
+
+        super().__init__(
+            screen=screen,
+            pos=pos,
+            size=size,
+            bodyImage=bodyImage,
+            handImage=wheelImage,
+            inputToDeg=inputToDeg,
+            offset_deg=offset_deg,
+            kp=kp,
+            minMax_deg=minMax_deg,
+        )
