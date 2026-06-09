@@ -46,9 +46,8 @@ class Model3D(Gauge):
         """Update the position and attitude angle of 3D world"""
         self._world.reset()
         self._world.rotate(
-            x=pitch * PI / 180, y=yaw * PI / 180, z=roll * PI / 180, initShape=False
-        )
-        self._world.translate(x=x, y=y, z=z, initShape=False)
+            x=pitch * PI / 180, y=yaw * PI / 180, z=roll * PI / 180)
+        self._world.translate(x=x, y=y, z=z)
 
     def draw(self, draw=True):
         fillSurface(self._dial, 0xFFFFFF)  # WHITE)
