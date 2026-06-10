@@ -25,16 +25,16 @@ class Model3D(Gauge):
             net = (
                 OWF.Object_wireFrame(obj=Objects.net(25, 25), color=(0, 100, 0))
                 .rotate(x=PI / 2, y=0, z=0)
-                .translate(V=(-1000, -1000, -1000), initShape=True)
-                .scale(0.2, initShape=True)
+                .translate(-1000, -1000, -1000)
+                .scale(0.2).setOrigin()
             )
             axis = (
                 OWF.Object_wireFrame(
                     filename=os.path.join(path, "../objects/axis.json"),
                     color=(10, 10, 10),
                 )
-                .translate(V=(0, 0, 0), initShape=True)
-                .scale(1.5, initShape=True)
+                .translate(0, 0, 0)
+                .scale(1.5).setOrigin()
             )
             world = OB.Object_container(objList=(net, axis))
         self._world = world
