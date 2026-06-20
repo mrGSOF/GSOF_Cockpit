@@ -11,7 +11,6 @@ from GSOF_Cockpit.Plot import Plot as PLOT
 from GSOF_Cockpit.DualPlot import DualPlot as DPLOT
 
 from GSOF_Cockpit.GraphicsLib import imageLoad, getScreen, init, fillScreen, update
-from GSOF_Cockpit.Text import Text
 from GSOF_Cockpit import Pygame_Colors as COLOR
 from GSOF_Cockpit.Clock_base import Clock
 
@@ -26,7 +25,6 @@ fillScreen(screen, COLOR.WHITE)
 
 # Initialise Dials.
 path = "../"
-background = Text(screen=screen, pos=pos, size=size, color=BG_color, name="")
 
 plot1 = PLOT(
     screen=screen,

@@ -42,6 +42,9 @@ class Model3D(Gauge):
             self._dial, drawLine, f=50, scale=10
         )  #< f and scale affect the perspective calculation
 
+    def reset(self):
+        self._world.reset()
+
     def update(self, x=0, y=0, z=0, yaw=0, pitch=0, roll=0):  #< x:pitvh, y:roll, z:yaw
         """Update the position and attitude angle of 3D world"""
         self._world.reset()
