@@ -15,7 +15,7 @@ class VsiMeter(SingleIndicator):
         size=(0, 0),
         bodyImage=None,
         handImage=None,
-        inputToDeg=25,
+        inputToDeg=-25,
         offset_deg=90,
         minMax_deg=(-90, 270),
         kp=0.8,
