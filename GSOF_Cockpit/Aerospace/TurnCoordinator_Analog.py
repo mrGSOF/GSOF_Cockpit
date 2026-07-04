@@ -24,7 +24,7 @@
 *      http://www.codeproject.com/KB/miscctrl/Avionic_Instruments.aspx
 """
 
-import pkg_resources
+from GSOF_Cockpit.Utils import getResourcePath
 from GSOF_Cockpit.DualIndicator import DualIndicator
 from GSOF_Cockpit.GraphicsLib import rotate, scale, clip, blit, imageLoad
 
@@ -54,25 +54,25 @@ class TurnCoord(DualIndicator):
 
         if bodyImage == None:
             bodyImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/TurnCoordinator_Background.png"
                 )
             )
         if turnImage == None:
             turnImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/TurnCoordinatorAircraft.png"
                 )
             )
         if slipImage == None:
             slipImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/TurnCoordinatorBall.png"
                 )
             )
         if iconImage == None:
             iconImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/TurnCoordinatorMarks.png"
                 )
             )

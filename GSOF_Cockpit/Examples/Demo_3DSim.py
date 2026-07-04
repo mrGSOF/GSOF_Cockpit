@@ -126,7 +126,6 @@ screen = getScreen(screen_size)
 fillScreen( screen, COLOR.WHITE )
    
 # Initialise Dials.
-#path = pkg_resources.resource_filename('GSOF_Pygame_Cockpit', '')
 path = '../../GSOF_Cockpit'
 Cockpit = DemoCockpit(screen, colorBG=BG_color, scale=1.0, folder=path)
 

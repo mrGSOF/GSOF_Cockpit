@@ -1,3 +1,0 @@
-pygame
-setuptools
-GSOF_3dWireFrame

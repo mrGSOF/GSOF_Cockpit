@@ -3,3 +3,4 @@ __pycache__/
 /dist
 /.history
 /*.spec
+*.egg-info
