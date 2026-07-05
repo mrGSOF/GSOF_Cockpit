@@ -39,7 +39,7 @@ class Model3D(Gauge):
             world = OB.Object_container(objList=(net, axis))
         self._world = world
         self._wireframe = DISP.WireFrame(
-            self._dial, drawLine, f=50, scale=10
+            self._dial, drawLine, scale=500
         )  #< f and scale affect the perspective calculation
 
     def reset(self):
