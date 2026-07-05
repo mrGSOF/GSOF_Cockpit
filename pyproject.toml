@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "GSOF_Cockpit"
+version = "1.0.0"
+description = "GSOF Cockpit-Instruments under Pygame"
+readme = "README.md"
+authors = [
+    { name = "Guy Soffer", email = "gsoffer@yahoo.com" }
+]
+license = { text = "MIT" }
+keywords = ["Cockpit"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Graphics :: 3D Rendering",
+]
+dependencies = [
+    "markdown",
+    "pygame-ce",
+    "GSOF_3dWireFrame"
+]
+
+[project.urls]
+Homepage = "https://github.com/mrGSOF/GSOF_Cockpit"
+
+[tool.setuptools]
+packages = ["GSOF_Cockpit"]
+
+[tool.setuptools.package-dir]
+GSOF_Cockpit = "GSOF_Cockpit"
+
+[tool.setuptools.package-data]
+GSOF_Cockpit = [
+    "Aerospace/*.*",
+    "Automotive/*.*",
+    "Generic/*.*",
+    "Wireframe3D/*.*",
+    "resources/*.*",
+    "skin/*.*",
+    "objects/*.*",
+    "Examples/*.*",
+]

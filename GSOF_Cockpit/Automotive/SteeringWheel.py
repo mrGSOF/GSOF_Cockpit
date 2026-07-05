@@ -1,7 +1,7 @@
 ## Created on: 10 Mar 2023
 ## Author:     Guy Soffer
 
-import pkg_resources
+from GSOF_Cockpit.Utils import getResourcePath
 from GSOF_Cockpit.SingleIndicator import SingleIndicator
 from GSOF_Cockpit.GraphicsLib import imageLoad
 
@@ -22,13 +22,13 @@ class SteeringWheel(SingleIndicator):
 
         if bodyImage == None:
             bodyImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/Indicator_Background.png"
                 )
             )
         if wheelImage == None:
             wheelImage = imageLoad(
-                pkg_resources.resource_filename(
+                getResourcePath(
                     "GSOF_Cockpit", "resources/SteeringWheel.png"
                 )
             )
