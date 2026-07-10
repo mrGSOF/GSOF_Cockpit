@@ -12,9 +12,9 @@ from GSOF_3dWireFrame.Lib3D import WireFrame_display as DISP
 
 PI = math.pi
 
-
 class Model3D(Gauge):
-    def __init__(self, screen, pos=(0, 0), size=(0, 0), bodyImage=None, world=None):
+    def __init__(self, screen, pos=(0, 0), size=(0, 0), bodyImage=None, world=None,
+                 scale=500, minViewDistance=50, maxViewDistance=5000):
         path = os.path.dirname(__file__)
         if bodyImage == None:
             bodyImage = imageLoad(os.path.join(path, "../skin/Frame_Rect.png"))
@@ -39,8 +39,11 @@ class Model3D(Gauge):
             world = OB.Object_container(objList=(net, axis))
         self._world = world
         self._wireframe = DISP.WireFrame(
-            self._dial, drawLine, scale=500
-        )  #< f and scale affect the perspective calculation
+            self._dial, drawLine,
+            scale=scale,
+            minViewDistance=minViewDistance,
+            maxViewDistance=maxViewDistance 
+        )
 
     def reset(self):
         self._world.reset()
